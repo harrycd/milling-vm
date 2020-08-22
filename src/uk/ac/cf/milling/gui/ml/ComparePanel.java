@@ -11,7 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +38,7 @@ import uk.ac.cf.milling.utils.runnables.MLCompareRunnable;
  */
 public class ComparePanel {
 	private JPanel panel;
-
+	
 	public JPanel getPanel(){
 		createPanel();
 		if (panel != null) return panel;
@@ -275,45 +275,60 @@ public class ComparePanel {
 		//Keeps the directory path (avoid navigating to the same directory twice)
 		JFileChooser chooser = new JFileChooser();
 		
-		//File type combobox listener
-		cmbDataFileType1.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//"CSV file", "Analysis File"
-				if (cmbDataFileType1.getSelectedItem().equals("CSV file")){
-					txtDataFile1.setVisible(true);
-					btnBrowse1.setVisible(true);
-					cmbAnalysisFile1.setVisible(false);
-				} else {
-					txtDataFile1.setVisible(false);
-					btnBrowse1.setVisible(false);
-					cmbAnalysisFile1.setVisible(true);
-				}
-			}
-		});
+		cmbDataFileType1.addActionListener(getCmbDataFileTypeListener(cmbDataFileType1, txtDataFile1, btnBrowse1, cmbAnalysisFile1));
 
-		//File type combobox listener
-		cmbDataFileType2.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				//"CSV file", "Analysis File"
-				if (cmbDataFileType2.getSelectedItem().equals("CSV file")){
-					txtDataFile2.setVisible(true);
-					btnBrowse2.setVisible(true);
-					cmbAnalysisFile2.setVisible(false);
-				} else {
-					txtDataFile2.setVisible(false);
-					btnBrowse2.setVisible(false);
-					cmbAnalysisFile2.setVisible(true);
-				}
-			}
-		});
-
-		//Browse button 1 listener
+		cmbDataFileType2.addActionListener(getCmbDataFileTypeListener(cmbDataFileType2, txtDataFile2, btnBrowse2, cmbAnalysisFile2));
 		
-		btnBrowse1.addActionListener(new ActionListener() {
+		btnBrowse1.addActionListener(getBtnBrowse1Listener(chooser, txtDataFile1, txtDataFile2, listSynchParamsModel, cmbParam));
+		
+		btnBrowse2.addActionListener(getBtnBrowse2Listener(chooser, txtDataFile1, txtDataFile2, listSynchParamsModel, cmbParam));
+
+		btnCompare.addActionListener(getBtnCompareListener(
+												cmbDataFileType1, cmbDataFileType2, 
+												txtDataFile1, txtDataFile2,
+												txtMA, listSynchParams, 
+												cmbParam, chkShowDiff));
+		
+		panel.addComponentListener(getPanelComponentListener(cmbAnalysisFile1, cmbAnalysisFile2));
+	}
+	
+
+	/**
+	 * @param cmbAnalysisFile 
+	 * @param btnBrowse 
+	 * @param txtDataFile 
+	 * @param cmbDataFileType 
+	 * @return file type combobox listener
+	 */
+	private ActionListener getCmbDataFileTypeListener(JComboBox<String> cmbDataFileType, JTextField txtDataFile, JButton btnBrowse, JComboBox<String> cmbAnalysisFile) {
+		ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//"CSV file", "Analysis File"
+				if (cmbDataFileType.getSelectedItem().equals("CSV file")){
+					txtDataFile.setVisible(true);
+					btnBrowse.setVisible(true);
+					cmbAnalysisFile.setVisible(false);
+				} else {
+					txtDataFile.setVisible(false);
+					btnBrowse.setVisible(false);
+					cmbAnalysisFile.setVisible(true);
+				}
+			}
+		};
+		return listener;
+	}
+
+	/**
+	 * @param chooser 
+	 * @param txtDataFile1 
+	 * @param cmbParam 
+	 * @param listSynchParamsModel 
+	 * @return
+	 */
+	private ActionListener getBtnBrowse1Listener(JFileChooser chooser, JTextField txtDataFile1, JTextField txtDataFile2, DefaultListModel<String> listSynchParamsModel, JComboBox<String> cmbParam) {
+		ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -325,13 +340,17 @@ public class ComparePanel {
 	            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
 	            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-	            	String filePath = chooser.getSelectedFile().toString();
+	            	//store the selected file as property of the text field
+	            	File benchmarkFile = chooser.getSelectedFile();
+	            	File[] dataFiles = (File[]) txtDataFile2.getClientProperty("dataFiles");
+	            	
+	            	txtDataFile1.putClientProperty("benchmarkFile", benchmarkFile);
 	            	
 	            	//Update the text field with the selected file path
-	            	txtDataFile1.setText(filePath);
+	            	txtDataFile1.setText(benchmarkFile.toString());
 	            	
 	            	//Update the list of parameters with the parameters obtained by the selected file
-	            	updateParamList(txtDataFile1.getText(), txtDataFile2.getText(), listSynchParamsModel, cmbParam);
+	            	updateParamList(benchmarkFile, dataFiles, listSynchParamsModel, cmbParam);
 	            	
 	            } else {
 	                System.out.println("No Selection ");
@@ -339,11 +358,19 @@ public class ComparePanel {
 			}
 
 			
-		});
-		
-		
-		//Browse button 2 listener
-		btnBrowse2.addActionListener(new ActionListener() {
+		};
+		return listener;
+	}
+
+	/**
+	 * @param cmbParam 
+	 * @param listSynchParamsModel 
+	 * @param txtDataFile2 
+	 * @param chooser 
+	 * @return
+	 */
+	private ActionListener getBtnBrowse2Listener(JFileChooser chooser, JTextField txtDataFile1, JTextField txtDataFile2, DefaultListModel<String> listSynchParamsModel, JComboBox<String> cmbParam) {
+		ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -352,29 +379,60 @@ public class ComparePanel {
 				}
 				chooser.setDialogTitle("Select file");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setMultiSelectionEnabled(true);
 				
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-					String filePath = chooser.getSelectedFile().toString();
-					txtDataFile2.setText(filePath);
+					
+					File benchmarkFile = (File) txtDataFile1.getClientProperty("benchmarkFile");
+					File[] dataFiles = chooser.getSelectedFiles();
+					
+					//store the selected file as property of the text field
+					txtDataFile2.putClientProperty("dataFiles", dataFiles);
+					
+					txtDataFile2.setText(dataFiles.length + " files selected");
 					chooser.setCurrentDirectory(chooser.getCurrentDirectory());
 					
-					updateParamList(txtDataFile1.getText(), txtDataFile2.getText(), listSynchParamsModel, cmbParam);
+					updateParamList(benchmarkFile, dataFiles, listSynchParamsModel, cmbParam);
 					
 				} else {
 					System.out.println("No Selection ");
 				}
 			}
-		});
+		};
+		return listener;
+	}
+
+	/**
+	 * @param cmbDataFileType1
+	 * @param cmbDataFileType2
+	 * @param txtDataFile1
+	 * @param txtDataFile2
+	 * @param txtMA
+	 * @param listSynchParams
+	 * @param cmbParam
+	 * @param chkShowDiff
+	 * @return compare button listener
+	 */
+	private ActionListener getBtnCompareListener(
+			JComboBox<String> cmbDataFileType1, 
+			JComboBox<String> cmbDataFileType2, 
+			JTextField txtDataFile1, 
+			JTextField txtDataFile2, 
+			JTextField txtMA, 
+			JList<String> listSynchParams, 
+			JComboBox<String> cmbParam, 
+			JCheckBox chkShowDiff) {
 		
-		
-		//Compare button listener
-		btnCompare.addActionListener(new ActionListener() {
+		ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (cmbDataFileType1.getSelectedItem().equals("CSV file") && cmbDataFileType2.getSelectedItem().equals("CSV file")){
+					File benchmarkFile = (File) txtDataFile1.getClientProperty("benchmarkFile");
+					File[] dataFiles = (File[]) txtDataFile2.getClientProperty("dataFiles");
+					
 					MLCompareRunnable compareRunnable = new MLCompareRunnable();
-					compareRunnable.setDataFiles(txtDataFile1.getText(), txtDataFile2.getText());
+					compareRunnable.setDataFiles(benchmarkFile, dataFiles);
 					compareRunnable.setMa(Integer.parseInt(txtMA.getText()));
 					compareRunnable.setSynchParams(listSynchParams.getSelectedValuesList());
 					compareRunnable.setCompareParam(cmbParam.getSelectedItem().toString());
@@ -383,9 +441,17 @@ public class ComparePanel {
 					t.start();
 				}
 			}
-		});
-		
-		panel.addComponentListener(new ComponentListener() {
+		};
+		return listener;
+	}
+
+	/**
+	 * @param cmbAnalysisFile1 
+	 * @param cmbAnalysisFile2 
+	 * @return refresh panel listener (for comboboxes only)
+	 */
+	private ComponentListener getPanelComponentListener(JComboBox<String> cmbAnalysisFile1, JComboBox<String> cmbAnalysisFile2) {
+		ComponentListener listener = new ComponentListener() {
 
 			@Override
 			public void componentShown(ComponentEvent e) {
@@ -408,7 +474,9 @@ public class ComparePanel {
 			@Override public void componentResized(ComponentEvent e) {}			
 			@Override public void componentMoved(ComponentEvent e) {}			
 			@Override public void componentHidden(ComponentEvent e) {}
-		});
+		};
+		
+		return listener;
 	}
 
 	/**
@@ -429,18 +497,19 @@ public class ComparePanel {
 	 * @param listModel - the model of the JList to update
 	 * @param combobox 
 	 */
-	private void updateParamList(String filePath1, String filePath2, DefaultListModel<String> listModel, JComboBox<String> combobox) {
+	private void updateParamList(File benchmarkFile, File[] dataFiles, DefaultListModel<String> listModel, JComboBox<String> combobox) {
 		
-		if (filePath1.equals("") || filePath2.equals("")) return;
+		if (benchmarkFile == null || dataFiles == null) return;
 		
-		ArrayList<String> paramTypes1 = new ArrayList<String>(Arrays.asList(IoUtils.getCSVTitles(filePath1)));
-		ArrayList<String> paramTypes2 = new ArrayList<String>(Arrays.asList(IoUtils.getCSVTitles(filePath2)));
+		File[] files = new File[dataFiles.length + 1];
+		files[0] = benchmarkFile;
+		System.arraycopy(dataFiles, 0, files, 1, dataFiles.length);
 		
-		paramTypes1.retainAll(paramTypes2);
-    	
+		String[] titles = IoUtils.getCommonCSVTitles(files);
+		
 		listModel.clear();
 		combobox.removeAllItems();
-    	paramTypes1.stream().forEach(item -> {
+		Arrays.stream(titles).forEach(item -> {
     		listModel.addElement(item);
     		combobox.addItem(item);
     		});

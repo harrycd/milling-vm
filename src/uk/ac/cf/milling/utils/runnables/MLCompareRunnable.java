@@ -5,6 +5,7 @@ package uk.ac.cf.milling.utils.runnables;
 
 import java.awt.Toolkit;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,8 +27,11 @@ import uk.ac.cf.milling.utils.Plotter2D;
  *
  */
 public class MLCompareRunnable implements Runnable {
-	private String dataFile1 = "";
-	private String dataFile2 = "";
+//	private String dataFile1 = "";
+//	private String dataFile2 = "";
+	
+	private File benchmarkFile;
+	private File[] dataFiles;
 	
 	private List<String> synchParams = new ArrayList<String>();
 	private String compareParam = "";
@@ -61,50 +65,85 @@ public class MLCompareRunnable implements Runnable {
 		
 		//...4b) plot the difference in number of samples (if sample rate is same, this corresponds to time)
 		
-		String[] titles1 = IoUtils.getCSVTitles(dataFile1);
-		String[] titles2 = IoUtils.getCSVTitles(dataFile2);
-		
+		/*
+		 * TODO
+		 * for every data file {
+		 * 	compare
+		 * 	add results to list for plotting
+		 * }
+		 * if (diff = true) {
+		 * 	show a plot where x has basemark sample and y has a bar showing 3 lines basemark, min and max
+		 * } else {
+		 *  show plot every line separately (with bold the line of benchmark)
+		 * }
+		 *  
+		 */
+		String[] titles1 = IoUtils.getCSVTitles(benchmarkFile);
 		List<Integer> indexesSynch1 = DataFileUtils.findTitleIndex(synchParams, titles1);
-		List<Integer> indexesSynch2 = DataFileUtils.findTitleIndex(synchParams, titles2);
-
 		List<Integer> indexesCompare1 = DataFileUtils.findTitleIndex(Collections.singletonList(compareParam), titles1);
-		List<Integer> indexesCompare2 = DataFileUtils.findTitleIndex(Collections.singletonList(compareParam), titles2);
-		
-		double[][] allValues1 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(dataFile1));
-		double[][] allValues2 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(dataFile2));
-		
-			System.out.println("CSV files parsed in: " + (System.currentTimeMillis() - stepTime) + "msec");
-			stepTime = System.currentTimeMillis();
-		
+		double[][] allValues1 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(benchmarkFile));
+
 		//Pass the values of syncronisation parameters in the correct order to new arrays
 		//synchValues[param type index][param value]
 		double[][] synchValues1 = new double[synchParams.size()][allValues1[0].length];
-		double[][] synchValues2 = new double[synchParams.size()][allValues2[0].length];
 		
-		for (int i = 0; i < indexesSynch1.size(); i++)
-			synchValues1[i] = allValues1[indexesSynch1.get(i)];
-		
-		for (int i = 0; i < indexesSynch2.size(); i++) {
-			synchValues2[i] = allValues2[indexesSynch2.get(i)];
-		}
-		
-		//DTW on the sets based on the synchronisation parameters
-		int[][] relation = MLUtils.getCurveRelation(synchValues1, synchValues2);
-		
-		//Pass the values of comparison parameter to a new array
-		double[] compareValues1 = allValues1[indexesCompare1.get(0)];
-		double[] compareValues2 = allValues2[indexesCompare2.get(0)];
-		
-		System.out.println("Samples synchronised in: " + (System.currentTimeMillis() - stepTime) + "msec");
+		System.out.println("CSV file " + benchmarkFile.getName() + " parsed in: " + (System.currentTimeMillis() - stepTime) + "msec");
 		stepTime = System.currentTimeMillis();
 		
+		
+		for (File dataFile : dataFiles) {
+
+			String[] titles2 = IoUtils.getCSVTitles(dataFile);
+			List<Integer> indexesSynch2 = DataFileUtils.findTitleIndex(synchParams, titles2);
+			List<Integer> indexesCompare2 = DataFileUtils.findTitleIndex(Collections.singletonList(compareParam), titles2);
+			double[][] allValues2 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(dataFile));
+			double[][] synchValues2 = new double[synchParams.size()][allValues2[0].length];
+
+			System.out.println("CSV file " + dataFile.getName() + " parsed in: " + (System.currentTimeMillis() - stepTime) + "msec");
+			stepTime = System.currentTimeMillis();
+			
+			for (int i = 0; i < indexesSynch1.size(); i++)
+				synchValues1[i] = allValues1[indexesSynch1.get(i)];
+			
+			for (int i = 0; i < indexesSynch2.size(); i++) {
+				synchValues2[i] = allValues2[indexesSynch2.get(i)];
+			}
+
+			//DTW on the sets based on the synchronisation parameters
+			int[][] relation = MLUtils.getCurveRelation(synchValues1, synchValues2);
+			
+			//Pass the values of comparison parameter to a new array
+			double[] compareValues1 = allValues1[indexesCompare1.get(0)];
+			double[] compareValues2 = allValues2[indexesCompare2.get(0)];
+			
+			System.out.println("Samples of " + dataFile.getName() + " synchronised in: " + (System.currentTimeMillis() - stepTime) + "msec");
+			
+			plotGraph(relation, compareValues1, compareValues2, synchValues1, synchValues2);
+			
+			stepTime = System.currentTimeMillis();
+		}
+		
+		//Inform with a sound that execution finished
+		Toolkit.getDefaultToolkit().beep();
+		
+		//Switch to the results window
+		GUIBuilder.showResultsPanel();
+	}
+	
+	/**
+	 * @param relation
+	 * @param compareValues1
+	 * @param compareValues2
+	 * @param synchValues1
+	 * @param synchValues2
+	 */
+	private void plotGraph(int[][] relation, double[] compareValues1, double[] compareValues2, double[][] synchValues1, double[][] synchValues2) {
 		JPanel plotPanel = new JPanel();
 		if (showDiff){
 			plotPanel = Plotter2D.generateDiffPlot(relation, compareValues1, compareValues2, (compareParam + " data comparison"), ma, "Samples (?)", compareParam);
 		} else {
 			plotPanel = Plotter2D.generatePlots(relation, compareValues1, compareValues2, (compareParam + " data comparison"), ma, "Samples (?)", compareParam);
 		}
-		System.out.println("done in: " + (System.currentTimeMillis() - stepTime) + "msec");
 
 		printRelation(relation, synchValues1, synchValues2);
 		printRelationDiff(relation, synchValues1, synchValues2);
@@ -113,13 +152,7 @@ public class MLCompareRunnable implements Runnable {
 		if (showDiff) plotTitle += " diff";
 		if (ma > 1) plotTitle += " sma" + ma;
 		ResultsPanel.addTab(plotTitle, plotPanel);
-		
-		
-		//Inform with a sound that execution finished
-		Toolkit.getDefaultToolkit().beep();
-		
-		//Switch to the results window
-		GUIBuilder.showResultsPanel();
+
 	}
 	
 
@@ -170,9 +203,14 @@ public class MLCompareRunnable implements Runnable {
 	 * @param dataFilePath1
 	 * @param dataFilePath2
 	 */
-	public void setDataFiles(String dataFilePath1, String dataFilePath2){
-		this.dataFile1 = dataFilePath1;
-		this.dataFile2 = dataFilePath2;
+//	public void setDataFiles(String dataFilePath1, String dataFilePath2){
+//		this.dataFile1 = dataFilePath1;
+//		this.dataFile2 = dataFilePath2;
+//	}
+	
+	public void setDataFiles(File benchmarkFile, File[] dataFiles) {
+		this.benchmarkFile = benchmarkFile;
+		this.dataFiles = dataFiles;
 	}
 	
 	
