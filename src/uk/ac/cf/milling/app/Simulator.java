@@ -21,16 +21,15 @@ import uk.ac.cf.milling.objects.CuttingToolProfile;
 import uk.ac.cf.milling.objects.KPIs;
 import uk.ac.cf.milling.objects.SettingsSingleton;
 import uk.ac.cf.milling.objects.SimulatorConfig;
-import uk.ac.cf.milling.utils.CuttingToolProfileUtils;
-import uk.ac.cf.milling.utils.CuttingToolUtils;
-import uk.ac.cf.milling.utils.DataFileUtils;
-import uk.ac.cf.milling.utils.KPIUtils;
-import uk.ac.cf.milling.utils.Plotter2D;
-import uk.ac.cf.milling.utils.Plotter3D;
-import uk.ac.cf.milling.utils.Plotter3D_V3;
-import uk.ac.cf.milling.utils.Plotter3D_V4;
-//import uk.ac.cf.milling.utils.SettingUtils;
-import uk.ac.cf.milling.utils.SimulatorUtils;
+import uk.ac.cf.milling.utils.data.DataFileUtils;
+import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
+import uk.ac.cf.milling.utils.db.CuttingToolUtils;
+import uk.ac.cf.milling.utils.plotting.Plotter2D;
+import uk.ac.cf.milling.utils.plotting.Plotter3D_V1;
+import uk.ac.cf.milling.utils.plotting.Plotter3D_V3;
+import uk.ac.cf.milling.utils.plotting.Plotter3D_V4;
+import uk.ac.cf.milling.utils.simulation.KPIUtils;
+import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
 
 /**
  * @author Theocharis Alexopoulos

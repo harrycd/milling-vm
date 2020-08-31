@@ -23,9 +23,9 @@ import javax.swing.JTextField;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.CuttingTool;
 import uk.ac.cf.milling.objects.CuttingToolProfile;
-import uk.ac.cf.milling.utils.CuttingToolProfileUtils;
-import uk.ac.cf.milling.utils.CuttingToolUtils;
-import uk.ac.cf.milling.utils.ProfileBuilderUtils;
+import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
+import uk.ac.cf.milling.utils.db.CuttingToolUtils;
+import uk.ac.cf.milling.utils.simulation.ProfileBuilderUtils;
 
 /**
  * @author Theocharis Alexopoulos
@@ -96,12 +96,31 @@ public class NewToolPanel {
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(cmbToolType,constr);
+		
+		JLabel lblToolSeries = new JLabel("Tool Series :");
+		lblToolSeries.setFont(fontPlain);
+		constr = new GridBagConstraints();
+		constr.gridx = 0;
+		constr.gridy = 3;
+		constr.insets = new Insets(10, 10, 10, 10);
+		constr.weightx = 1;
+		panel.add(lblToolSeries,constr);
+
+		JTextField txtToolSeries = new JTextField("");
+		txtToolSeries.setFont(fontPlain);
+		constr = new GridBagConstraints();
+		constr.fill = GridBagConstraints.HORIZONTAL;
+		constr.gridx = 1;
+		constr.gridy = 3;
+		constr.insets = new Insets(10, 10, 10, 10);
+		constr.weightx = 1;
+		panel.add(txtToolSeries, constr);
 
 		JLabel lblToolTeeth = new JLabel("Number of teeth :");
 		lblToolTeeth.setFont(fontPlain);
 		constr = new GridBagConstraints();
 		constr.gridx = 0;
-		constr.gridy = 3;
+		constr.gridy = 4;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(lblToolTeeth,constr);
@@ -111,7 +130,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 1;
-		constr.gridy = 3;
+		constr.gridy = 4;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(txtToolTeeth, constr);
@@ -120,7 +139,7 @@ public class NewToolPanel {
 		lblToolLength.setFont(fontPlain);
 		constr = new GridBagConstraints();
 		constr.gridx = 0;
-		constr.gridy = 4;
+		constr.gridy = 5;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(lblToolLength,constr);
@@ -130,7 +149,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 1;
-		constr.gridy = 4;
+		constr.gridy = 5;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(txtToolLength, constr);
@@ -140,7 +159,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 2;
-		constr.gridy = 5;
+		constr.gridy = 6;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(btnSave, constr);
@@ -154,7 +173,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.EAST;
 		constr.gridx = 0;
-		constr.gridy = 5;
+		constr.gridy = 6;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(lblToolHeight,constr);
@@ -166,7 +185,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		//		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 1;
-		constr.gridy = 5;
+		constr.gridy = 6;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(txtToolHeight,constr);
@@ -178,7 +197,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.EAST;
 		constr.gridx = 0;
-		constr.gridy = 6;
+		constr.gridy = 7;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(lblToolDiameter,constr);
@@ -189,7 +208,7 @@ public class NewToolPanel {
 		txtToolDiameter.setVisible(false);
 		constr = new GridBagConstraints();
 		constr.gridx = 1;
-		constr.gridy = 6;
+		constr.gridy = 7;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(txtToolDiameter,constr);
@@ -201,7 +220,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.EAST;
 		constr.gridx = 0;
-		constr.gridy = 7;
+		constr.gridy = 8;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(lblNoseRadius,constr);
@@ -212,7 +231,7 @@ public class NewToolPanel {
 		txtNoseRadius.setVisible(false);
 		constr = new GridBagConstraints();
 		constr.gridx = 1;
-		constr.gridy = 7;
+		constr.gridy = 8;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(txtNoseRadius,constr);
@@ -231,6 +250,7 @@ public class NewToolPanel {
 				//Parse form data (common for all tools)
 				String toolName = txtToolName.getText();
 				String toolType = cmbToolType.getSelectedItem().toString();
+				String toolSeries = txtToolSeries.getText();
 				int toolTeeth = Integer.parseInt(txtToolTeeth.getText());
 				double toolLength = Double.parseDouble(txtToolLength.getText());
 				double toolRadius = 0.5* Double.parseDouble(txtToolDiameter.getText());
@@ -240,13 +260,13 @@ public class NewToolPanel {
 				//Create and add the profile as specified by the tool type
 				if (cmbToolType.getSelectedItem().toString().equals(CuttingTool.END_MILL)){
 					//Add the tool to the database
-					int toolId = CuttingToolUtils.addCuttingTool(toolName, toolType, toolTeeth, toolLength);
+					int toolId = CuttingToolUtils.addCuttingTool(toolName, toolType, toolSeries, toolTeeth, toolLength);
 					List<CuttingToolProfile> profiles = ProfileBuilderUtils.generateProfileEndMill(toolId, toolHeight, toolRadius);
 					CuttingToolProfileUtils.addCuttingToolProfiles(profiles);
 				}
 				else if (cmbToolType.getSelectedItem().toString().equals(CuttingTool.BALL_NOSE_MILL)){
 					double noseRadius = Double.parseDouble(txtNoseRadius.getText());
-					int toolId = CuttingToolUtils.addCuttingTool(toolName, toolType, toolTeeth, toolLength);
+					int toolId = CuttingToolUtils.addCuttingTool(toolName, toolType, toolSeries, toolTeeth, toolLength);
 					List<CuttingToolProfile> profiles = ProfileBuilderUtils.generateProfileBallNoseMill(toolId, toolHeight, toolRadius, noseRadius);
 					CuttingToolProfileUtils.addCuttingToolProfiles(profiles);
 				}

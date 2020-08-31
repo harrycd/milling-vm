@@ -27,8 +27,8 @@ import uk.ac.cf.milling.app.Simulator;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.objects.SimulatorConfig;
-import uk.ac.cf.milling.utils.BilletUtils;
-import uk.ac.cf.milling.utils.SettingUtils;
+import uk.ac.cf.milling.utils.db.BilletUtils;
+import uk.ac.cf.milling.utils.db.SettingUtils;
 
 /**
  * @author Theocharis Alexopoulos

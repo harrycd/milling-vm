@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 
 import uk.ac.cf.milling.gui.ButtonTabComponent;
-import uk.ac.cf.milling.utils.PlotterUtils;
+import uk.ac.cf.milling.utils.plotting.PlotterUtils;
 
 /**
  * @author Theocharis Alexopoulos

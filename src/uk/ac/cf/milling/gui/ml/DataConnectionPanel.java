@@ -23,8 +23,8 @@ import javax.swing.JTextField;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Nc;
-import uk.ac.cf.milling.utils.IoUtils;
-import uk.ac.cf.milling.utils.NcUtils;
+import uk.ac.cf.milling.utils.data.IoUtils;
+import uk.ac.cf.milling.utils.db.NcUtils;
 
 /**
  * @author Theocharis Alexopoulos

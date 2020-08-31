@@ -18,8 +18,8 @@ import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
-import uk.ac.cf.milling.utils.DatabaseUtils;
-import uk.ac.cf.milling.utils.SettingUtils;
+import uk.ac.cf.milling.utils.db.DatabaseUtils;
+import uk.ac.cf.milling.utils.db.SettingUtils;
 
 /**
  * @author Theocharis Alexopoulos
@@ -203,6 +203,7 @@ public class DatabasePanel {
 					
 					SettingUtils.setDbFilePath(chooser.getSelectedFile().toString());
 					txtSelectedDatabase.setText(chooser.getSelectedFile().toString());
+					DatabaseUtils.initialiseDB(txtSelectedDatabase.getText());
 					GUIBuilder.createAndShowFullGUI();
 				} else {
 					System.out.println("No Selection ");

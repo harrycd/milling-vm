@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
-import uk.ac.cf.milling.utils.MaterialUtils;
+import uk.ac.cf.milling.utils.db.MaterialUtils;
 
 /**
  * @author Theocharis Alexopoulos
@@ -118,6 +118,7 @@ public class NewMaterialPanel {
 				
 				GUIBuilder.refreshMaterialLibrary = true;
 				GUIBuilder.refreshNewBillet = true;
+				GUIBuilder.refreshTrain = true;
 				GUIBuilder.showMaterialLibraryPanel();
 			}
 		});

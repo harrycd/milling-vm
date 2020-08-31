@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.CuttingTool;
-import uk.ac.cf.milling.utils.CuttingToolUtils;
+import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 
 /**
  * @author Theocharis Alexopoulos

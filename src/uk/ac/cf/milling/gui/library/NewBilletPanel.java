@@ -31,8 +31,8 @@ import javax.swing.table.DefaultTableModel;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.objects.Material;
-import uk.ac.cf.milling.utils.BilletUtils;
-import uk.ac.cf.milling.utils.MaterialUtils;
+import uk.ac.cf.milling.utils.db.BilletUtils;
+import uk.ac.cf.milling.utils.db.MaterialUtils;
 
 /**
  * @author Theocharis Alexopoulos
