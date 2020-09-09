@@ -141,6 +141,7 @@ private JPanel panel;
 				}
 				chooser.setDialogTitle("Select file");
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				chooser.setCurrentDirectory(new java.io.File("."));
 				chooser.setMultiSelectionEnabled(true);
 				
 				if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {

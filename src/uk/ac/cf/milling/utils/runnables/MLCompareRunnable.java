@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.gui.view.ResultsPanel;
 import uk.ac.cf.milling.objects.KPIs;
-import uk.ac.cf.milling.utils.data.DataFileUtils;
+import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
 import uk.ac.cf.milling.utils.simulation.MLUtils;
@@ -53,18 +53,6 @@ public class MLCompareRunnable implements Runnable {
 		long stepTime = startTime;
 
 		/*
-		 * TODO
-		 * The CSV file is a generic file whose values are compared.
-		 * The plots use the csv title to indicate what has been compared
-		 * Parameter mapping will be needed to connect the generic approach of ML module
-		 * with the rest of the app which is "fixed" on the milling parameters. This has
-		 * to be planned in a generic way so every parameter can be connected to other
-		 * generically specified paramters with a specific calculation formula
-		 */
-		
-		//...4b) plot the difference in number of samples (if sample rate is same, this corresponds to time)
-		
-		/*
 		 * titles : All titles from CSV file
 		 * indexesSynch: The index of parameters that the synchronisation is based on (index in titles)
 		 * indexesCompare: The index of parameters that are compared (index in titles)
@@ -73,9 +61,9 @@ public class MLCompareRunnable implements Runnable {
 		 * compareValues: The values of one comparison parameter
 		 */
 		String[] titles1 = IoUtils.getCSVTitles(benchmarkFile);
-		List<Integer> indexesSynch1 = DataFileUtils.findTitleIndex(synchParams, titles1);
-		List<Integer> indexesCompare1 = DataFileUtils.findTitleIndex(Collections.singletonList(compareParam), titles1);
-		double[][] allValues1 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(benchmarkFile));
+		List<Integer> indexesSynch1 = DataManipulationUtils.findTitleIndex(synchParams, titles1);
+		List<Integer> indexesCompare1 = DataManipulationUtils.findTitleIndex(Collections.singletonList(compareParam), titles1);
+		double[][] allValues1 = DataManipulationUtils.transpose2DArrayValues(IoUtils.getCSVValues(benchmarkFile));
 
 		//Pass the values of syncronisation parameters in the correct order to new arrays
 		//synchValues[param type index][param value]
@@ -96,9 +84,9 @@ public class MLCompareRunnable implements Runnable {
 		for (File dataFile : dataFiles) {
 
 			String[] titles2 = IoUtils.getCSVTitles(dataFile);
-			List<Integer> indexesSynch2 = DataFileUtils.findTitleIndex(synchParams, titles2);
-			List<Integer> indexesCompare2 = DataFileUtils.findTitleIndex(Collections.singletonList(compareParam), titles2);
-			double[][] allValues2 = DataFileUtils.transpose2dArray(IoUtils.getCSVValues(dataFile));
+			List<Integer> indexesSynch2 = DataManipulationUtils.findTitleIndex(synchParams, titles2);
+			List<Integer> indexesCompare2 = DataManipulationUtils.findTitleIndex(Collections.singletonList(compareParam), titles2);
+			double[][] allValues2 = DataManipulationUtils.transpose2DArrayValues(IoUtils.getCSVValues(dataFile));
 			double[][] synchValues2 = new double[synchParams.size()][allValues2[0].length];
 
 			System.out.println("CSV file " + dataFile.getName() + " parsed in: " + (System.currentTimeMillis() - stepTime) + "msec");
@@ -163,7 +151,7 @@ public class MLCompareRunnable implements Runnable {
 			int sma, 
 			String title, String xAxisTitle, String yAxisTitle ) {
 		JPanel plotPanel = Plotter2D.generatePlots(relations, referenceDataset, datasets, title, sma, xAxisTitle, yAxisTitle);
-		ResultsPanel.addTab("All", plotPanel);
+		ResultsPanel.addTab("All SMA " + sma, plotPanel);
 	}
 	
 

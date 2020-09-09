@@ -24,6 +24,7 @@ import uk.ac.cf.milling.gui.ml.DataConnectionPanel;
 import uk.ac.cf.milling.gui.ml.TrainPanel;
 import uk.ac.cf.milling.gui.view.ControlPanel;
 import uk.ac.cf.milling.gui.view.MachineLogPanel;
+import uk.ac.cf.milling.gui.view.ProcessPanel;
 import uk.ac.cf.milling.gui.view.ResultsPanel;
 
 /**
@@ -50,6 +51,7 @@ public class GUIBuilder {
 	private static final String TRAIN = "Train";
 	private static final String COMPARE = "Compare";
 	private static final String CONNECT = "Connect";
+	private static final String PROCESS = "Process";
 	
 	
 	// Objects to access from various points
@@ -70,6 +72,7 @@ public class GUIBuilder {
 	public static boolean refreshCompare = false;
 	public static boolean refreshDataConnect = false;
 	public static boolean refreshTrain = false;
+	public static boolean refreshProcess = false;
 	
 	public static void createAndShowGUI(){
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -131,6 +134,9 @@ public class GUIBuilder {
 
 		JPanel dataConnectionPanel = new DataConnectionPanel().getPanel();
 		mainPanel.add(dataConnectionPanel, CONNECT);
+
+		JPanel processPanel = new ProcessPanel().getPanel();
+		mainPanel.add(processPanel, PROCESS);
 		
 		frame.pack();
 		showControlPanel();
@@ -195,6 +201,10 @@ public class GUIBuilder {
 
 	public static void showDataConnectionPanel(){
 		cardLayout.show(mainPanel, CONNECT);
+	}
+
+	public static void showProcessPanel(){
+		cardLayout.show(mainPanel, PROCESS);
 	}
 	
 	/*

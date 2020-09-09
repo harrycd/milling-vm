@@ -273,7 +273,7 @@ public class ControlPanel {
 //			public void actionPerformed(ActionEvent e) {
 //				String filePath = txtInputFilePath.getText();
 //				if (IoUtils.checkFileExists(filePath)) {
-//					double timeStep = DataFileUtils.calculateTimeStep(txtInputFilePath.getText());
+//					double timeStep = DataManipulationUtils.calculateTimeStep(txtInputFilePath.getText());
 //					txtTimeStep.setText(String.valueOf(timeStep));
 //				}
 //			}

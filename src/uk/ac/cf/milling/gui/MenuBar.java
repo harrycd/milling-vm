@@ -106,6 +106,10 @@ public class MenuBar {
 		controlViewMenu.setFont(font);
 		viewMenu.add(controlViewMenu);
 		
+		JMenuItem processViewMenu = new JMenuItem("Process");
+		processViewMenu.setFont(font);
+		viewMenu.add(processViewMenu);
+		
 		JMenuItem resultsViewMenu = new JMenuItem("Results");
 		resultsViewMenu.setFont(font);
 		viewMenu.add(resultsViewMenu);
@@ -240,6 +244,15 @@ public class MenuBar {
 			}
 		};
 		controlViewMenu.addActionListener(controlViewMenuListener);
+		
+		ActionListener processViewMenuListener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUIBuilder.showProcessPanel();
+			}
+		};
+		processViewMenu.addActionListener(processViewMenuListener);
 		
 		ActionListener carouselLibraryMenuListener = new ActionListener() {
 			

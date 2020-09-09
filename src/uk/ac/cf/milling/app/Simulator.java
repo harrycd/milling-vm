@@ -21,7 +21,7 @@ import uk.ac.cf.milling.objects.CuttingToolProfile;
 import uk.ac.cf.milling.objects.KPIs;
 import uk.ac.cf.milling.objects.SettingsSingleton;
 import uk.ac.cf.milling.objects.SimulatorConfig;
-import uk.ac.cf.milling.utils.data.DataFileUtils;
+import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
@@ -74,7 +74,7 @@ public class Simulator implements Runnable{
 		 */
 		
 		//Print toolpath limits
-		DataFileUtils.printToolPathLimits(kpis);
+		DataManipulationUtils.printToolPathLimits(kpis);
 
 		// Plot the machined part
 		if (config.isShow3dPart()){
