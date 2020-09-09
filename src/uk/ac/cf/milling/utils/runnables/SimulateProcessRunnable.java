@@ -25,8 +25,6 @@ import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
-import uk.ac.cf.milling.utils.plotting.Plotter3D_V1;
-import uk.ac.cf.milling.utils.plotting.Plotter3D_V3;
 import uk.ac.cf.milling.utils.plotting.Plotter3D_V4;
 import uk.ac.cf.milling.utils.simulation.KPIUtils;
 import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
