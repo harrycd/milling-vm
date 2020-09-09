@@ -23,12 +23,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import uk.ac.cf.milling.app.Simulator;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.objects.SimulatorConfig;
 import uk.ac.cf.milling.utils.db.BilletUtils;
 import uk.ac.cf.milling.utils.db.SettingUtils;
+import uk.ac.cf.milling.utils.runnables.SimulateProcessRunnable;
 
 /**
  * @author Theocharis Alexopoulos
@@ -120,7 +120,7 @@ public class ControlPanel {
 				
 		
 		// Configuration section title
-		JLabel lblConfig = new JLabel("Simulator Configuration");
+		JLabel lblConfig = new JLabel("SimulateProcessRunnable Configuration");
 		lblConfig.setFont(fontTitle);
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.WEST;
@@ -302,7 +302,7 @@ public class ControlPanel {
 				}else if (billet == null){
 					System.out.println("Simulation error: No billet selected!");
 				} else {
-		    		Thread t = new Thread(new Simulator(config));
+		    		Thread t = new Thread(new SimulateProcessRunnable(config));
 		    		t.start();
 				}
 			}

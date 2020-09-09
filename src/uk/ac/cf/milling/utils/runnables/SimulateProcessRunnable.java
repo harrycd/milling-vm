@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.cf.milling.app;
+package uk.ac.cf.milling.utils.runnables;
 
 import java.awt.Toolkit;
 import java.nio.file.Paths;
@@ -35,10 +35,10 @@ import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
  * @author Theocharis Alexopoulos
  *
  */
-public class Simulator implements Runnable{
+public class SimulateProcessRunnable implements Runnable{
 	SimulatorConfig config = null;
 
-	public Simulator(SimulatorConfig config) {
+	public SimulateProcessRunnable(SimulatorConfig config) {
 		this.config = config;
 	}
 
