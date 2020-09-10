@@ -159,7 +159,7 @@ public class NewToolPanel {
 		constr = new GridBagConstraints();
 		constr.fill = GridBagConstraints.HORIZONTAL;
 		constr.gridx = 2;
-		constr.gridy = 6;
+		constr.gridy = 8;
 		constr.insets = new Insets(10, 10, 10, 10);
 		constr.weightx = 1;
 		panel.add(btnSave, constr);

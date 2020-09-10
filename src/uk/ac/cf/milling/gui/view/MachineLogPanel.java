@@ -67,7 +67,7 @@ public class MachineLogPanel extends DefaultPanelElements{
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.WEST;
 		constr.fill = GridBagConstraints.BOTH;
-		constr.gridx = 1;
+		constr.gridx = 2;
 		constr.gridy = 1;
 		constr.gridwidth = 3;
 		constr.insets = new Insets(10, 10, 10, 10);

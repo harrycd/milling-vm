@@ -19,13 +19,17 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import com.util.Arrays;
+
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.objects.SimulatorConfig;
+import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.db.BilletUtils;
 import uk.ac.cf.milling.utils.db.SettingUtils;
 import uk.ac.cf.milling.utils.runnables.SimulateProcessRunnable;
@@ -120,7 +124,7 @@ public class ControlPanel {
 				
 		
 		// Configuration section title
-		JLabel lblConfig = new JLabel("SimulateProcessRunnable Configuration");
+		JLabel lblConfig = new JLabel("Configuration");
 		lblConfig.setFont(fontTitle);
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.WEST;
@@ -241,72 +245,13 @@ public class ControlPanel {
 		constr.insets = new Insets(10, 10, 10, 10);
 		panel.add(btnRun,constr);
 		
-		
-		/* Listeners */
-		
-		btnBrowse.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File("."));
-	            chooser.setDialogTitle("Select GCode file");
-	            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		// Keep track of last file location (for button browse listener)
+		JFileChooser chooser = new JFileChooser("."); 
 
-	            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-	            	String selectedFile = chooser.getSelectedFile().toString();
-	            	txtInputFilePath.setText(selectedFile);
-	            	
-	            	//Auto change to .csv input
-	            	if (selectedFile.substring(selectedFile.length()-4).equals(".csv")) {
-	            		cmbInputFileType.setSelectedIndex(1);
-	            	}
-	            } else {
-	                System.out.println("No Selection ");
-	            }
-			}
-		});
-		
-//		btnTimeStepCalc.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				String filePath = txtInputFilePath.getText();
-//				if (IoUtils.checkFileExists(filePath)) {
-//					double timeStep = DataManipulationUtils.calculateTimeStep(txtInputFilePath.getText());
-//					txtTimeStep.setText(String.valueOf(timeStep));
-//				}
-//			}
-//		});
-		
-		btnRun.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GUIBuilder.showMachineLogPanel();
-				
-				// Save timestep setting
-				SettingUtils.setTimeStep(txtTimeStep.getText());
-				
-				Billet billet = (Billet) cmbBillet.getSelectedItem();
-				
-				// Create the simulator configuration
-				SimulatorConfig config = new SimulatorConfig();
-				config.setInputFilePath(txtInputFilePath.getText());
-				config.setInputFileType(cmbInputFileType.getSelectedItem().toString());
-				config.setBillet(billet);
-				config.setShow3dPart(chkbxShow3dPart.isSelected());
-				config.setShow2dGraphs(chkbxShow2dGraphs.isSelected());
-				
-				if (txtInputFilePath.getText().equals("")){
-					System.out.println("Simulation error: No input file selected!");
-				}else if (billet == null){
-					System.out.println("Simulation error: No billet selected!");
-				} else {
-		    		Thread t = new Thread(new SimulateProcessRunnable(config));
-		    		t.start();
-				}
-			}
-		});
+		/* Listeners */
+		btnBrowse.addActionListener(getBtnBrowseListener(txtInputFilePath, cmbInputFileType, chooser));
+
+		btnRun.addActionListener(getBtnRunListener(txtTimeStep, cmbBillet, txtInputFilePath, cmbInputFileType, chkbxShow3dPart, chkbxShow2dGraphs));
 
 //		TODO Cancel process if it takes too long or other issues.		
 //		btnCancel.addActionListener(new ActionListener() {
@@ -355,6 +300,109 @@ public class ControlPanel {
 		});
 	}
 	
+	/**
+	 * @param chkbxShow2dGraphs 
+	 * @param chkbxShow3dPart 
+	 * @param cmbInputFileType 
+	 * @param txtInputFilePath 
+	 * @param cmbBillet 
+	 * @param txtTimeStep 
+	 * @return
+	 */
+	private ActionListener getBtnRunListener(JTextField txtTimeStep, JComboBox<Billet> cmbBillet, JTextField txtInputFilePath, JComboBox<String> cmbInputFileType, JCheckBox chkbxShow3dPart, JCheckBox chkbxShow2dGraphs) {
+		ActionListener listener = new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				// Save timestep setting, 
+				SettingUtils.setTimeStep(txtTimeStep.getText());
+				Billet billet = (Billet) cmbBillet.getSelectedItem();
+				boolean inputOK = checkInputOK();
+				
+				
+				if (inputOK) {
+					GUIBuilder.showMachineLogPanel();
+					
+					// Create the simulator configuration
+					SimulatorConfig config = new SimulatorConfig();
+					config.setInputFilePath(txtInputFilePath.getText());
+					config.setInputFileType(cmbInputFileType.getSelectedItem().toString());
+					config.setBillet(billet);
+					config.setShow3dPart(chkbxShow3dPart.isSelected());
+					config.setShow2dGraphs(chkbxShow2dGraphs.isSelected());
+					
+					Thread t = new Thread(new SimulateProcessRunnable(config));
+					t.start();
+				}
+			}
+
+			/**
+			 * @return
+			 */
+			private boolean checkInputOK() {
+				boolean inputOK = true;
+				
+				if (cmbInputFileType.getSelectedItem().toString().equals("CSV file")) {
+					String[] titles = IoUtils.getCSVTitles(txtInputFilePath.getText());
+					if (!Arrays.contains(titles, "t")) {
+						JOptionPane.showMessageDialog(null, "Time (t) column missing! MRR cannot be calculated", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
+					}
+					if (!Arrays.contains(titles, "T")) {
+						JOptionPane.showMessageDialog(null, "Tool (T) column is missing", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
+						inputOK = false;
+					}
+					if (!Arrays.contains(titles, "X") || !Arrays.contains(titles, "Y") || !Arrays.contains(titles, "Z")) {
+						JOptionPane.showMessageDialog(null, "Coordinates (X,Y,Z) columns are missing", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
+						inputOK = false;
+					}
+				}
+				
+				if (txtInputFilePath.getText().equals("")){
+					JOptionPane.showMessageDialog(null, "No input file selected!", "Input file empty:", JOptionPane.ERROR_MESSAGE);
+					inputOK = false;
+				} 
+
+				if ((Billet) cmbBillet.getSelectedItem() == null){
+					JOptionPane.showMessageDialog(null, "No billet selected!", "Billet empty:", JOptionPane.ERROR_MESSAGE);
+					inputOK = false;
+				}
+				return inputOK;
+			}
+		};
+		return listener;
+	}
+
+	/**
+	 * @param cmbInputFileType 
+	 * @param txtInputFilePath 
+	 * @return
+	 */
+	private ActionListener getBtnBrowseListener(JTextField txtInputFilePath, JComboBox<String> cmbInputFileType, JFileChooser chooser) {
+		ActionListener listener = new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+	            chooser.setDialogTitle("Select GCode file");
+	            chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+
+	            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+	            	String selectedFile = chooser.getSelectedFile().toString();
+	            	txtInputFilePath.setText(selectedFile);
+	            	chooser.setCurrentDirectory(chooser.getCurrentDirectory());
+	            	
+	            	//Auto change to .csv input
+	            	if (selectedFile.substring(selectedFile.length()-4).equals(".csv")) {
+	            		cmbInputFileType.setSelectedIndex(1);
+	            	}
+	            } else {
+	                System.out.println("No Selection ");
+	            }
+			}
+		};
+		return listener;
+	}
+
 	/**
 	 * @return the list of all available materials
 	 */
