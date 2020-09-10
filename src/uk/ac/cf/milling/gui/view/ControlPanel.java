@@ -24,11 +24,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-import com.util.Arrays;
-
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.objects.SimulatorConfig;
+import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.db.BilletUtils;
 import uk.ac.cf.milling.utils.db.SettingUtils;
@@ -344,14 +343,17 @@ public class ControlPanel {
 				
 				if (cmbInputFileType.getSelectedItem().toString().equals("CSV file")) {
 					String[] titles = IoUtils.getCSVTitles(txtInputFilePath.getText());
-					if (!Arrays.contains(titles, "t")) {
+					if (!DataManipulationUtils.containsEqual(titles, "t")) {
 						JOptionPane.showMessageDialog(null, "Time (t) column missing! MRR cannot be calculated", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
 					}
-					if (!Arrays.contains(titles, "T")) {
+					if (!DataManipulationUtils.containsEqual(titles, "T")) {
 						JOptionPane.showMessageDialog(null, "Tool (T) column is missing", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
 						inputOK = false;
 					}
-					if (!Arrays.contains(titles, "X") || !Arrays.contains(titles, "Y") || !Arrays.contains(titles, "Z")) {
+					if (!DataManipulationUtils.containsEqual(titles, "X") 
+							|| !DataManipulationUtils.containsEqual(titles, "Y") 
+							|| !DataManipulationUtils.containsEqual(titles, "Z")) {
+						
 						JOptionPane.showMessageDialog(null, "Coordinates (X,Y,Z) columns are missing", "Insufficient input params:", JOptionPane.ERROR_MESSAGE);
 						inputOK = false;
 					}
