@@ -21,11 +21,12 @@ import uk.ac.cf.milling.objects.CuttingToolProfile;
 import uk.ac.cf.milling.objects.KPIs;
 import uk.ac.cf.milling.objects.SettingsSingleton;
 import uk.ac.cf.milling.objects.SimulatorConfig;
+import uk.ac.cf.milling.utils.data.ConvertUtils;
 import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
-import uk.ac.cf.milling.utils.plotting.Plotter3D_V4;
+import uk.ac.cf.milling.utils.plotting.Plotter3D;
 import uk.ac.cf.milling.utils.simulation.KPIUtils;
 import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
 
@@ -79,11 +80,14 @@ public class SimulateProcessRunnable implements Runnable{
 			long timer = System.currentTimeMillis();
 
 			//New plotter - same window
-			JPanel chart3dPanel2 = Plotter3D_V4.getChartPanel(kpis.getPart());
+//			JPanel chart3DPanelV3 = Plotter3D.getV3ChartPanel(kpis.getPart());
+//			ResultsPanel.addTab(
+//					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
+//					, chart3DPanelV3);
+			JPanel chart3DPanelV4 = Plotter3D.getV4ChartPanel(kpis.getPart());
 			ResultsPanel.addTab(
-					"Part: " +
-					Paths.get(config.getInputFilePath()).getFileName().toString() //the filename
-					, chart3dPanel2);
+					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
+					, chart3DPanelV4);
 			System.out.println("done");
 			System.out.println("new graph time:" + (System.currentTimeMillis() - timer));
 		}
@@ -93,7 +97,7 @@ public class SimulateProcessRunnable implements Runnable{
 			System.out.print("Plotting Process Parameters...");
 			List<JPanel> panels = new ArrayList<JPanel>();
 			
-			JPanel mrrPanel = Plotter2D.get2dPlotPanel(kpis.getTimePoints(), KPIUtils.getMrrMM3perSec(kpis, config));
+			JPanel mrrPanel = Plotter2D.get2dPlotPanel("MRR", kpis.getTimePoints(), ConvertUtils.castToFloatArray(KPIUtils.getMrrMM3perSec(kpis, config)));
 			panels.add(mrrPanel);
 
 			//Generate the tool usage charts
@@ -122,7 +126,10 @@ public class SimulateProcessRunnable implements Runnable{
 					index++;
 				}
 				
-				JPanel axialToolPanel = Plotter2D.get2dPlotPanel(axialProfilesDataX, axialProfilesDataY);
+				JPanel axialToolPanel = Plotter2D.get2dPlotPanel(
+						"Axial Profile (side)", 
+						ConvertUtils.castToFloatArray(axialProfilesDataX), 
+						ConvertUtils.castToFloatArray(axialProfilesDataY));
 				panels.add(axialToolPanel);
 				
 				
@@ -143,7 +150,12 @@ public class SimulateProcessRunnable implements Runnable{
 //				
 //				plots.add(radialUsage);
 
-				JPanel radialToolPanel = Plotter2D.get2dPlotPanel(radialProfilesDataX, radialProfilesDataY);
+				JPanel radialToolPanel = Plotter2D.get2dPlotPanel(
+						"Radial Profile (nose)", 
+						ConvertUtils.castToFloatArray(radialProfilesDataX), 
+						ConvertUtils.castToFloatArray(radialProfilesDataY)
+						);
+				
 				panels.add(radialToolPanel);
 				
 			}

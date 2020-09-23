@@ -9,12 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import uk.ac.cf.milling.gui.DefaultPanelElements;
@@ -55,36 +58,42 @@ public class ProcessPanel extends DefaultPanelElements{
 		constr = getDefaultConstraints(2, 1);
 		panel.add(btnBrowse, constr);
 		
-		JLabel lblParameter = getDefaultLabel("Parameter:");
+		JLabel lblParameters = getDefaultLabel("Parameters:");
 		constr = getDefaultConstraints(0, 2, GridBagConstraints.EAST);
-		panel.add(lblParameter, constr);
+		panel.add(lblParameters, constr);
 		
-		JComboBox<String> cmbParameter = new JComboBox<String>();
-		constr = getDefaultConstraints(1, 2, GridBagConstraints.WEST);
-		panel.add(cmbParameter, constr);
+		DefaultListModel<String> listParamsModel = new DefaultListModel<String>();
+		JList<String> listParams = new JList<>(listParamsModel);
+		listParams.setFont(getFontPlain());
+		constr = getDefaultConstraints(1, 2);
+		constr.fill = GridBagConstraints.HORIZONTAL;
+		JScrollPane panelParams = new JScrollPane(listParams);
+		panel.add(panelParams, constr);
 		
 		JLabel lblSma = getDefaultLabel("SMA:");
 		constr = getDefaultConstraints(0, 3, GridBagConstraints.EAST);
 		panel.add(lblSma, constr);
 		
-		JTextField txtSma = getDefaultTextField(5);
+		JTextField txtMA = getDefaultTextField(5);
+		txtMA.setText("1");
 		constr = getDefaultConstraints(1, 3, GridBagConstraints.WEST);
-		panel.add(txtSma, constr);
+		panel.add(txtMA, constr);
 		
 		JButton btnView = getDefaultButton("View");
 		constr = getDefaultConstraints(2, 4);
 		panel.add(btnView, constr);
 		
-		btnBrowse.addActionListener(getBtnBrowseListener(txtDatafile, cmbParameter));
-		btnView.addActionListener(getBtnViewListener(txtDatafile, cmbParameter));
+		btnBrowse.addActionListener(getBtnBrowseListener(txtDatafile, listParamsModel));
+		btnView.addActionListener(getBtnViewListener(txtDatafile, listParams, txtMA));
 	}
 
 	/**
 	 * @param txtDatafile 
+	 * @param listParamsModel 
 	 * @param cmbParameter 
 	 * @return
 	 */
-	private ActionListener getBtnBrowseListener(JTextField txtDatafile, JComboBox<String> cmbParameter) {
+	private ActionListener getBtnBrowseListener(JTextField txtDatafile, DefaultListModel<String> listParamsModel) {
 		ActionListener listener = new ActionListener() {
 			
 			@Override
@@ -101,7 +110,7 @@ public class ProcessPanel extends DefaultPanelElements{
 					File datafile = chooser.getSelectedFile();
 					txtDatafile.setText(datafile.getAbsolutePath());
 					chooser.setCurrentDirectory(chooser.getCurrentDirectory());
-					updateParamLists(datafile, cmbParameter);
+					updateParamLists(datafile, listParamsModel);
 				} else {
 					System.out.println("No Selection ");
 				}
@@ -114,30 +123,33 @@ public class ProcessPanel extends DefaultPanelElements{
 	
 	/**
 	 * @param datafile
-	 * @param cmbParameter
+	 * @param listParamsModel 
 	 */
-	private void updateParamLists(File datafile, JComboBox<String> cmbParameter) {
+	private void updateParamLists(File datafile, DefaultListModel<String> listParamsModel) {
 		String[] titles = IoUtils.getCSVTitles(datafile);
-		cmbParameter.removeAllItems();
+		listParamsModel.clear();
 		Arrays.stream(titles).forEach(item -> {
-    		cmbParameter.addItem(item);
+    		listParamsModel.addElement(item);
     		});		
 	}
 	
 	/**
 	 * @param txtDatafile 
+	 * @param listParams 
+	 * @param txtMA 
 	 * @return
 	 */
-	private ActionListener getBtnViewListener(JTextField txtDatafile, JComboBox<String> cmbParameter) {
+	private ActionListener getBtnViewListener(JTextField txtDatafile, JList<String> listParams, JTextField txtMA) {
 		ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String filePath = txtDatafile.getText();
-				String paramName = (String)cmbParameter.getSelectedItem();
+				List<String> selectedParameters = listParams.getSelectedValuesList();
 				ViewProcessRunnable runnable = new ViewProcessRunnable();
 				runnable.setFilePath(filePath);
-				runnable.setParamName(paramName);
+				runnable.setParameterList(selectedParameters);
+				runnable.setMa(Integer.parseInt(txtMA.getText()));
 				Thread t = new Thread(runnable);
 				t.start();
 			}

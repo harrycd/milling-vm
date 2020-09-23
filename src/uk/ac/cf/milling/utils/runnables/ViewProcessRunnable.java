@@ -4,14 +4,17 @@
 package uk.ac.cf.milling.utils.runnables;
 
 import java.awt.Toolkit;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
+import uk.ac.cf.milling.graphs.ProcessGraphsPanel;
 import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.gui.view.ResultsPanel;
 import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
-import uk.ac.cf.milling.utils.plotting.ColourScatter3D;
 
 /**
  * @author Theocharis Alexopoulos
@@ -20,23 +23,39 @@ import uk.ac.cf.milling.utils.plotting.ColourScatter3D;
  */
 public class ViewProcessRunnable implements Runnable {
 	private String filePath;
-	private String paramName;
+	private List<String> parameterList;
+	private int ma;
 
 	@Override
 	public void run() {
 		
+		GUIBuilder.showMachineLogPanel();
+		
 		double[][] allValues = IoUtils.getCSVValues(filePath);
 		allValues = DataManipulationUtils.transpose2DArrayValues(allValues); //turned to double[col][rows]
-		String[] titles = new String[] {"X", "Y", "Z", paramName};
-		int[] indexes = IoUtils.getCSVTitleIndexes(filePath, titles);
-		double[][] coordinates = new double[3][];
-		coordinates[0] = allValues[indexes[0]];
-		coordinates[1] = allValues[indexes[1]];
-		coordinates[2] = allValues[indexes[2]];
-		double[] paramValues = allValues[indexes[3]];
 		
-		JPanel paramPanel = ColourScatter3D.getParameter3DColourMap(coordinates, paramName, paramValues);
-		ResultsPanel.addTab(paramName, paramPanel);
+		String[] coordinatesTitles = new String[] {"X", "Y", "Z"};
+		int[] coordinatesIndexes = IoUtils.getCSVTitleIndexes(filePath, coordinatesTitles);
+		double[][] coordinates = new double[3][];
+		coordinates[0] = allValues[coordinatesIndexes[0]];
+		coordinates[1] = allValues[coordinatesIndexes[1]];
+		coordinates[2] = allValues[coordinatesIndexes[2]];
+		
+		Map<String, double[]> parameters = new HashMap<String, double[]>();
+		for (String paramName : parameterList) {
+			int paramIndex = IoUtils.getCSVTitleIndex(filePath, paramName);
+			double[] paramValues = allValues[paramIndex];
+			if (ma > 1) {
+				paramValues = DataManipulationUtils.getCenteredMovingAverage(paramValues, ma);
+			}
+
+			parameters.put(paramName, paramValues);
+		}
+		
+		
+		JPanel newResultsPanel = new ProcessGraphsPanel().getProcessGraphsPanel(coordinates, parameters);
+		ResultsPanel.addTab("Process", newResultsPanel);
+		
 		
 		//Inform with a sound that execution finished
 		Toolkit.getDefaultToolkit().beep();
@@ -53,10 +72,17 @@ public class ViewProcessRunnable implements Runnable {
 	}
 
 	/**
-	 * @param paramName the paramName to set
+	 * @param parameterList the parameterList to set
 	 */
-	public void setParamName(String paramName) {
-		this.paramName = paramName;
+	public void setParameterList(List<String> parameterList) {
+		this.parameterList = parameterList;
+	}
+
+	/**
+	 * @param ma the ma to set
+	 */
+	public void setMa(int ma) {
+		this.ma = ma;
 	}
 	
 }
