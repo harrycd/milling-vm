@@ -13,6 +13,8 @@ import java.util.List;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -58,42 +60,64 @@ public class ProcessPanel extends DefaultPanelElements{
 		constr = getDefaultConstraints(2, 1);
 		panel.add(btnBrowse, constr);
 		
-		JLabel lblParameters = getDefaultLabel("Parameters:");
+		JLabel lblYAxis = getDefaultLabel("Y Axis:");
 		constr = getDefaultConstraints(0, 2, GridBagConstraints.EAST);
-		panel.add(lblParameters, constr);
+		panel.add(lblYAxis, constr);
 		
-		DefaultListModel<String> listParamsModel = new DefaultListModel<String>();
-		JList<String> listParams = new JList<>(listParamsModel);
-		listParams.setFont(getFontPlain());
+		DefaultListModel<String> listYParamsModel = new DefaultListModel<String>();
+		JList<String> listYParams = new JList<>(listYParamsModel);
+		listYParams.setFont(getFontPlain());
 		constr = getDefaultConstraints(1, 2);
 		constr.fill = GridBagConstraints.HORIZONTAL;
-		JScrollPane panelParams = new JScrollPane(listParams);
+		JScrollPane panelParams = new JScrollPane(listYParams);
 		panel.add(panelParams, constr);
 		
-		JLabel lblSma = getDefaultLabel("SMA:");
+		JLabel lblYSma = getDefaultLabel("Y-SMA:");
 		constr = getDefaultConstraints(0, 3, GridBagConstraints.EAST);
-		panel.add(lblSma, constr);
+		panel.add(lblYSma, constr);
 		
-		JTextField txtMA = getDefaultTextField(5);
-		txtMA.setText("1");
+		JTextField txtYSma = getDefaultTextField(5);
+		txtYSma.setText("1");
 		constr = getDefaultConstraints(1, 3, GridBagConstraints.WEST);
-		panel.add(txtMA, constr);
+		panel.add(txtYSma, constr);
+		
+		JLabel lblXAxis = getDefaultLabel("X axis");
+		constr = getDefaultConstraints(0, 4);
+		panel.add(lblXAxis, constr);
+		
+		JComboBox<String> cmbXParam = new JComboBox<String>(); 
+		cmbXParam.setFont(getFontPlain());
+		constr = getDefaultConstraints(1, 4);
+		panel.add(cmbXParam, constr);
+		
+		JCheckBox chkScatter = new JCheckBox("Scatter");
+		constr = getDefaultConstraints(2, 4);
+		panel.add(chkScatter, constr);
+		
+		JLabel lblXSma = getDefaultLabel("X-SMA:");
+		constr = getDefaultConstraints(0, 5, GridBagConstraints.EAST);
+		panel.add(lblXSma, constr);
+		
+		JTextField txtXSma = getDefaultTextField(5);
+		txtXSma.setText("1");
+		constr = getDefaultConstraints(1, 5, GridBagConstraints.WEST);
+		panel.add(txtXSma, constr);
 		
 		JButton btnView = getDefaultButton("View");
-		constr = getDefaultConstraints(2, 4);
+		constr = getDefaultConstraints(2, 6);
 		panel.add(btnView, constr);
 		
-		btnBrowse.addActionListener(getBtnBrowseListener(txtDatafile, listParamsModel));
-		btnView.addActionListener(getBtnViewListener(txtDatafile, listParams, txtMA));
+		btnBrowse.addActionListener(getBtnBrowseListener(txtDatafile, listYParamsModel, cmbXParam));
+		btnView.addActionListener(getBtnViewListener(txtDatafile, listYParams, cmbXParam, chkScatter, txtXSma, txtYSma));
 	}
 
 	/**
 	 * @param txtDatafile 
 	 * @param listParamsModel 
-	 * @param cmbParameter 
+	 * @param cmbXAxis 
 	 * @return
 	 */
-	private ActionListener getBtnBrowseListener(JTextField txtDatafile, DefaultListModel<String> listParamsModel) {
+	private ActionListener getBtnBrowseListener(JTextField txtDatafile, DefaultListModel<String> listParamsModel, JComboBox<String> cmbXAxis) {
 		ActionListener listener = new ActionListener() {
 			
 			@Override
@@ -110,7 +134,7 @@ public class ProcessPanel extends DefaultPanelElements{
 					File datafile = chooser.getSelectedFile();
 					txtDatafile.setText(datafile.getAbsolutePath());
 					chooser.setCurrentDirectory(chooser.getCurrentDirectory());
-					updateParamLists(datafile, listParamsModel);
+					updateParamLists(datafile, listParamsModel, cmbXAxis);
 				} else {
 					System.out.println("No Selection ");
 				}
@@ -124,32 +148,49 @@ public class ProcessPanel extends DefaultPanelElements{
 	/**
 	 * @param datafile
 	 * @param listParamsModel 
+	 * @param cmbXAxis 
 	 */
-	private void updateParamLists(File datafile, DefaultListModel<String> listParamsModel) {
+	private void updateParamLists(File datafile, DefaultListModel<String> listParamsModel, JComboBox<String> cmbXAxis) {
 		String[] titles = IoUtils.getCSVTitles(datafile);
 		listParamsModel.clear();
+		cmbXAxis.removeAllItems();
+		cmbXAxis.addItem("None"); //to use sample index instead
 		Arrays.stream(titles).forEach(item -> {
     		listParamsModel.addElement(item);
+    		cmbXAxis.addItem(item);
     		});		
 	}
 	
 	/**
 	 * @param txtDatafile 
-	 * @param listParams 
-	 * @param txtMA 
+	 * @param listYParams 
+	 * @param cmbXParam 
+	 * @param chkScatter 
+	 * @param txtXSma 
+	 * @param txtYSma 
 	 * @return
 	 */
-	private ActionListener getBtnViewListener(JTextField txtDatafile, JList<String> listParams, JTextField txtMA) {
+	private ActionListener getBtnViewListener(
+			JTextField txtDatafile, 
+			JList<String> listYParams, 
+			JComboBox<String> cmbXParam, 
+			JCheckBox chkScatter, 
+			JTextField txtXSma, 
+			JTextField txtYSma) 
+	{
 		ActionListener listener = new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String filePath = txtDatafile.getText();
-				List<String> selectedParameters = listParams.getSelectedValuesList();
+				List<String> selectedYParameters = listYParams.getSelectedValuesList();
 				ViewProcessRunnable runnable = new ViewProcessRunnable();
 				runnable.setFilePath(filePath);
-				runnable.setParameterList(selectedParameters);
-				runnable.setMa(Integer.parseInt(txtMA.getText()));
+				runnable.setYParameters(selectedYParameters);
+				runnable.setXParameter((String) cmbXParam.getSelectedItem());
+				runnable.setScatterGraph(chkScatter.isSelected());
+				runnable.setXSma(Integer.parseInt(txtXSma.getText()));
+				runnable.setYSma(Integer.parseInt(txtYSma.getText()));
 				Thread t = new Thread(runnable);
 				t.start();
 			}

@@ -40,7 +40,12 @@ public class ProcessGraphsPanel extends DefaultPanelElements {
 	List<JPanel> innerPanel2dGraphs = new ArrayList<JPanel>();
 	List<JPanel> innerPanel3dGraphs = new ArrayList<JPanel>();
 
-	public JPanel getProcessGraphsPanel(double[][] coords, Map<String, double[]> parameters){
+	public JPanel getProcessGraphsPanel(
+			double[][] coords, 
+			Map<String, double[]> parameters, 
+			double[] xAxisParameter, 
+			boolean scatterGraph)
+	{
 		JPanel outerPanel = new JPanel(new BorderLayout());
 		outerPanel.setBackground(new Color(0, 0, 200));
 		JPanel innerPanel = new JPanel();
@@ -57,7 +62,11 @@ public class ProcessGraphsPanel extends DefaultPanelElements {
 			innerPanel3dGraphs.add(panel3d);
 			
 			//Create a 2d graph parameter vs sample number
-			JPanel panel2d = Plotter2D.get2dPlotPanel(parameter.getKey(), ConvertUtils.castToFloatArray(parameter.getValue()));
+			JPanel panel2d = Plotter2D.get2dPlotPanel(
+					parameter.getKey(),
+					ConvertUtils.castToFloatArray(xAxisParameter),
+					ConvertUtils.castToFloatArray(parameter.getValue()),
+					scatterGraph);
 			panel2d.setPreferredSize(new Dimension(500, 500));
 			innerPanel.add(panel2d);
 			innerPanel2dGraphs.add(panel2d);
@@ -122,10 +131,12 @@ public class ProcessGraphsPanel extends DefaultPanelElements {
 					//Modify the 2d panels
 					for (JPanel panel2d : innerPanel2dGraphs) {
 						Serie2d series = (Serie2d) panel2d.getClientProperty("series");
-						float[] data = (float[]) panel2d.getClientProperty("data");
-						float[] dataSelected = Arrays.copyOfRange(data, slider.getLowValue(), slider.getHighValue());
+						float[] dataX = (float[]) panel2d.getClientProperty("dataX");
+						float[] dataY = (float[]) panel2d.getClientProperty("dataY");
+						float[] dataXSelected = Arrays.copyOfRange(dataX, slider.getLowValue(), slider.getHighValue());
+						float[] dataYSelected = Arrays.copyOfRange(dataY, slider.getLowValue(), slider.getHighValue());
 						series.clear();
-						series = Plotter2D.populateSeries(series, dataSelected);
+						series = Plotter2D.populateSeries(series, dataXSelected, dataYSelected);
 					}
 					
 					//Modify the 3d panels

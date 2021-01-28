@@ -208,8 +208,7 @@ public class ComparePanel {
 		panel.add(lblParamName,constr);
 		
 		// Parameter name combobox
-		String[] paramList = { "Time", "Spindle Speed", "Spindle Load", "X Load", "Y Load", "Z Load", "XYZ Load" };
-		JComboBox<String> cmbParam = new JComboBox<String>(paramList);
+		JComboBox<String> cmbParam = new JComboBox<String>();
 		cmbParam.setFont(fontPlain);
 		constr = new GridBagConstraints();
 		constr.anchor = GridBagConstraints.WEST;

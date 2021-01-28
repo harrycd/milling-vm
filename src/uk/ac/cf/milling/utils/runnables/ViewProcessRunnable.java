@@ -23,8 +23,11 @@ import uk.ac.cf.milling.utils.data.IoUtils;
  */
 public class ViewProcessRunnable implements Runnable {
 	private String filePath;
-	private List<String> parameterList;
-	private int ma;
+	private List<String> yParameters;
+	private String xParameter;
+	private boolean scatterGraph;
+	private int xSma;
+	private int ySma;
 
 	@Override
 	public void run() {
@@ -42,18 +45,32 @@ public class ViewProcessRunnable implements Runnable {
 		coordinates[2] = allValues[coordinatesIndexes[2]];
 		
 		Map<String, double[]> parameters = new HashMap<String, double[]>();
-		for (String paramName : parameterList) {
+		for (String paramName : yParameters) {
 			int paramIndex = IoUtils.getCSVTitleIndex(filePath, paramName);
 			double[] paramValues = allValues[paramIndex];
-			if (ma > 1) {
-				paramValues = DataManipulationUtils.getCenteredMovingAverage(paramValues, ma);
+			if (ySma > 1) {
+				paramValues = DataManipulationUtils.getCenteredMovingAverage(paramValues, ySma);
 			}
 
 			parameters.put(paramName, paramValues);
 		}
 		
+		int xParameterIndex = IoUtils.getCSVTitleIndex(filePath, xParameter);
+		double[] xParameterValues;
+		if (xParameterIndex >= 0) {
+			xParameterValues = allValues[xParameterIndex];
+		} else {
+			xParameterValues = new double[allValues[0].length];
+			for (int i = 0; i < allValues[0].length; i++) {
+				xParameterValues[i] = i;
+			}
+		}
 		
-		JPanel newResultsPanel = new ProcessGraphsPanel().getProcessGraphsPanel(coordinates, parameters);
+		if (xSma > 1) {
+			xParameterValues = DataManipulationUtils.getCenteredMovingAverage(xParameterValues, xSma);
+		}
+		
+		JPanel newResultsPanel = new ProcessGraphsPanel().getProcessGraphsPanel(coordinates, parameters, xParameterValues, scatterGraph);
 		ResultsPanel.addTab("Process", newResultsPanel);
 		
 		
@@ -72,17 +89,39 @@ public class ViewProcessRunnable implements Runnable {
 	}
 
 	/**
-	 * @param parameterList the parameterList to set
+	 * @param yParameters the yParameters to set
 	 */
-	public void setParameterList(List<String> parameterList) {
-		this.parameterList = parameterList;
+	public void setYParameters(List<String> yParameters) {
+		this.yParameters = yParameters;
 	}
 
 	/**
-	 * @param ma the ma to set
+	 * @param xParameter the xParameter to set
 	 */
-	public void setMa(int ma) {
-		this.ma = ma;
+	public void setXParameter(String xParameter) {
+		this.xParameter = xParameter;
 	}
+
+	/**
+	 * @param scatterGraph the scatterGraph to set
+	 */
+	public void setScatterGraph(boolean scatterGraph) {
+		this.scatterGraph = scatterGraph;
+	}
+
+	/**
+	 * @param xSma the xSma to set
+	 */
+	public void setXSma(int xSma) {
+		this.xSma = xSma;
+	}
+
+	/**
+	 * @param ySma the ySma to set
+	 */
+	public void setYSma(int ySma) {
+		this.ySma = ySma;
+	}
+	
 	
 }

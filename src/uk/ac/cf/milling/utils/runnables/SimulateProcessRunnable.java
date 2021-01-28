@@ -27,7 +27,6 @@ import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
 import uk.ac.cf.milling.utils.plotting.Plotter3D;
-import uk.ac.cf.milling.utils.simulation.KPIUtils;
 import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
 
 /**
@@ -97,7 +96,7 @@ public class SimulateProcessRunnable implements Runnable{
 			System.out.print("Plotting Process Parameters...");
 			List<JPanel> panels = new ArrayList<JPanel>();
 			
-			JPanel mrrPanel = Plotter2D.get2dPlotPanel("MRR", kpis.getTimePoints(), ConvertUtils.castToFloatArray(KPIUtils.getMrrMM3perSec(kpis, config)));
+			JPanel mrrPanel = Plotter2D.get2dPlotPanel("MRR", ConvertUtils.castToFloatArray(kpis.getTimePoints()), ConvertUtils.castToFloatArray(kpis.getMrr()));
 			panels.add(mrrPanel);
 
 			//Generate the tool usage charts
