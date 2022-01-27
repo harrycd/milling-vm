@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import uk.ac.cf.milling.gui.file.DatabasePanel;
+import uk.ac.cf.milling.gui.learning.ComparePanel;
+import uk.ac.cf.milling.gui.learning.DataConnectionPanel;
+import uk.ac.cf.milling.gui.learning.TrainPanel;
 import uk.ac.cf.milling.gui.library.BilletLibraryPanel;
 import uk.ac.cf.milling.gui.library.CarouselPanel;
 import uk.ac.cf.milling.gui.library.MaterialLibraryPanel;
@@ -19,13 +22,10 @@ import uk.ac.cf.milling.gui.library.NewBilletPanel;
 import uk.ac.cf.milling.gui.library.NewMaterialPanel;
 import uk.ac.cf.milling.gui.library.NewToolPanel;
 import uk.ac.cf.milling.gui.library.ToolLibraryPanel;
-import uk.ac.cf.milling.gui.ml.ComparePanel;
-import uk.ac.cf.milling.gui.ml.DataConnectionPanel;
-import uk.ac.cf.milling.gui.ml.TrainPanel;
-import uk.ac.cf.milling.gui.view.ControlPanel;
-import uk.ac.cf.milling.gui.view.MachineLogPanel;
-import uk.ac.cf.milling.gui.view.ProcessPanel;
-import uk.ac.cf.milling.gui.view.ResultsPanel;
+import uk.ac.cf.milling.gui.simulation.ControlPanel;
+import uk.ac.cf.milling.gui.simulation.MachineLogPanel;
+import uk.ac.cf.milling.gui.simulation.ProcessPanel;
+import uk.ac.cf.milling.gui.simulation.ResultsPanel;
 
 /**
  * @author Theocharis Alexopoulos

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.cf.milling.gui.ml;
+package uk.ac.cf.milling.gui.learning;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 import uk.ac.cf.milling.graphs.ProcessGraphsPanel;
 import uk.ac.cf.milling.gui.GUIBuilder;
-import uk.ac.cf.milling.gui.view.ResultsPanel;
+import uk.ac.cf.milling.gui.simulation.ResultsPanel;
 import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
 

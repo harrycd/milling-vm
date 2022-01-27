@@ -15,12 +15,12 @@ import java.util.List;
 import javax.swing.JPanel;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
-import uk.ac.cf.milling.gui.view.ResultsPanel;
+import uk.ac.cf.milling.gui.simulation.ResultsPanel;
 import uk.ac.cf.milling.objects.KPIs;
 import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
+import uk.ac.cf.milling.utils.learning.DataSynchronisation;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
-import uk.ac.cf.milling.utils.simulation.MLUtils;
 
 /**
  * @author Theocharis Alexopoulos
@@ -97,7 +97,7 @@ public class MLCompareRunnable implements Runnable {
 			}
 
 			//DTW on the sets based on the synchronisation parameters
-			int[][] relation = MLUtils.getCurveRelation(synchValues1, synchValues2);
+			int[][] relation = DataSynchronisation.getCurveRelation(synchValues1, synchValues2);
 			
 			double[] compareValues2 = allValues2[indexesCompare2.get(0)];
 			

@@ -5,7 +5,8 @@ package uk.ac.cf.milling.utils.runnables;
 
 import java.io.File;
 
-import uk.ac.cf.milling.utils.simulation.MLUtils;
+import uk.ac.cf.milling.utils.learning.DataSynchronisation;
+import uk.ac.cf.milling.utils.learning.Models;
 
 /**
  * @author Theocharis Alexopoulos
@@ -26,7 +27,7 @@ public class MLTrainRunnable implements Runnable{
 		if (materialId != 0 && dataFiles != null && inputNames != null && targetNames != null ) {
 			for (File dataFile : dataFiles) {
 				for (String targetName : targetNames) {
-					MLUtils.trainLearningFactors(materialId, dataFile.getAbsolutePath(), inputNames, targetName);
+					Models.trainLearningFactors(materialId, dataFile.getAbsolutePath(), inputNames, targetName);
 				}
 			}
 			System.out.println("Learning Set trained in : " + (System.currentTimeMillis() - startTime) + "msec");

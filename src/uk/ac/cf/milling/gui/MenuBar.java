@@ -78,46 +78,47 @@ public class MenuBar {
 		libraryMenu.add(billetLibraryFileMenu);
 		
 		
-		//Machine Learning menu
-		JMenu mlMenu = new JMenu(" M.L. ");
-		mlMenu.setFont(font);
-		menuBar.add(mlMenu);
-		
-		JMenuItem connectMenu = new JMenuItem("Connect");
-		connectMenu.setFont(font);
-		mlMenu.add(connectMenu);
-
-		JMenuItem trainMenu = new JMenuItem("Train");
-		trainMenu.setFont(font);
-		mlMenu.add(trainMenu);
-		
-		JMenuItem compareMenu = new JMenuItem("Compare");
-		compareMenu.setFont(font);
-		mlMenu.add(compareMenu);
-		
-		
-		
-		// View menu
-		JMenu viewMenu = new JMenu(" View ");
+		// Simulation menu
+		JMenu viewMenu = new JMenu(" Simulation ");
 		viewMenu.setFont(font);
 		menuBar.add(viewMenu);
 		
-		JMenuItem controlViewMenu = new JMenuItem("Control");
-		controlViewMenu.setFont(font);
-		viewMenu.add(controlViewMenu);
+		JMenuItem dataSimulationMenu = new JMenuItem("Data");
+		dataSimulationMenu.setFont(font);
+		viewMenu.add(dataSimulationMenu);
 		
-		JMenuItem processViewMenu = new JMenuItem("Process");
-		processViewMenu.setFont(font);
-		viewMenu.add(processViewMenu);
+		JMenuItem controlSimulationMenu = new JMenuItem("Control");
+		controlSimulationMenu.setFont(font);
+		viewMenu.add(controlSimulationMenu);
 		
-		JMenuItem resultsViewMenu = new JMenuItem("Results");
-		resultsViewMenu.setFont(font);
-		viewMenu.add(resultsViewMenu);
+		JMenuItem resultsSimulationMenu = new JMenuItem("Results");
+		resultsSimulationMenu.setFont(font);
+		viewMenu.add(resultsSimulationMenu);
 		
-		JMenuItem machineLogViewMenu = new JMenuItem("Machine Log");
-		machineLogViewMenu.setFont(font);
-		viewMenu.add(machineLogViewMenu);
+		JMenuItem logSimulationMenu = new JMenuItem("Log");
+		logSimulationMenu.setFont(font);
+		viewMenu.add(logSimulationMenu);
 		
+		
+		
+		// Learning menu
+		JMenu learningMenu = new JMenu(" Learning ");
+		learningMenu.setFont(font);
+		menuBar.add(learningMenu);
+
+		JMenuItem connectMenu = new JMenuItem("Connect");
+		connectMenu.setFont(font);
+		learningMenu.add(connectMenu);
+
+		JMenuItem trainMenu = new JMenuItem("Train");
+		trainMenu.setFont(font);
+		learningMenu.add(trainMenu);
+
+		JMenuItem compareMenu = new JMenuItem("Compare");
+		compareMenu.setFont(font);
+		learningMenu.add(compareMenu);
+
+
 
 		// Help menu
 		JMenu helpMenu = new JMenu(" Help ");
@@ -207,35 +208,7 @@ public class MenuBar {
 		billetLibraryFileMenu.addActionListener(billetLibraryFileMenuListener);
 		
 		
-		//Machine Learning menu listeners
-		connectMenu.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GUIBuilder.showDataConnectionPanel();
-			}
-		});
-
-		trainMenu.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GUIBuilder.showTrainPanel();
-				
-			}
-		});
-		
-		compareMenu.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				GUIBuilder.showComparePanel();
-				
-			}
-		});
-		
-		
-		// View menu listeners
+		// Simulation menu listeners
 		ActionListener controlViewMenuListener = new ActionListener() {
 			
 			@Override
@@ -243,7 +216,7 @@ public class MenuBar {
 				GUIBuilder.showControlPanel();
 			}
 		};
-		controlViewMenu.addActionListener(controlViewMenuListener);
+		controlSimulationMenu.addActionListener(controlViewMenuListener);
 		
 		ActionListener processViewMenuListener = new ActionListener() {
 			
@@ -252,7 +225,7 @@ public class MenuBar {
 				GUIBuilder.showProcessPanel();
 			}
 		};
-		processViewMenu.addActionListener(processViewMenuListener);
+		dataSimulationMenu.addActionListener(processViewMenuListener);
 		
 		ActionListener carouselLibraryMenuListener = new ActionListener() {
 			
@@ -270,7 +243,7 @@ public class MenuBar {
 				GUIBuilder.showResultsPanel();
 			}
 		};
-		resultsViewMenu.addActionListener(resultsViewMenuListener);
+		resultsSimulationMenu.addActionListener(resultsViewMenuListener);
 	
 		ActionListener machineLogViewMenuListener = new ActionListener() {
 			
@@ -279,9 +252,37 @@ public class MenuBar {
 				GUIBuilder.showMachineLogPanel();
 			}
 		};
-		machineLogViewMenu.addActionListener(machineLogViewMenuListener);
+		logSimulationMenu.addActionListener(machineLogViewMenuListener);
 		
 		
+		//Machine Learning menu listeners
+		connectMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUIBuilder.showDataConnectionPanel();
+			}
+		});
+
+		trainMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUIBuilder.showTrainPanel();
+
+			}
+		});
+
+		compareMenu.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				GUIBuilder.showComparePanel();
+
+			}
+		});
+				
+				
 		// Help menu listeners
 		ActionListener contentsHelpMenuListener = new ActionListener() {
 			

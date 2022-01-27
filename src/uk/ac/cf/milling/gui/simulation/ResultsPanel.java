@@ -1,7 +1,7 @@
 /**
  * 
  */
-package uk.ac.cf.milling.gui.view;
+package uk.ac.cf.milling.gui.simulation;
 
 import java.awt.Component;
 import java.awt.event.ContainerEvent;
