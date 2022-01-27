@@ -15,16 +15,19 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 
 import uk.ac.cf.milling.gui.GUIBuilder;
-import uk.ac.cf.milling.gui.view.ResultsPanel;
+import uk.ac.cf.milling.gui.simulation.ResultsPanel;
 import uk.ac.cf.milling.objects.CuttingTool;
 import uk.ac.cf.milling.objects.CuttingToolProfile;
 import uk.ac.cf.milling.objects.KPIs;
+import uk.ac.cf.milling.objects.Nc;
 import uk.ac.cf.milling.objects.SettingsSingleton;
 import uk.ac.cf.milling.objects.SimulatorConfig;
 import uk.ac.cf.milling.utils.data.ConvertUtils;
 import uk.ac.cf.milling.utils.data.DataManipulationUtils;
+import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolProfileUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
+import uk.ac.cf.milling.utils.db.NcUtils;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
 import uk.ac.cf.milling.utils.plotting.Plotter3D;
 import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
@@ -51,16 +54,22 @@ public class SimulateProcessRunnable implements Runnable{
 		JProgressBar progressBar = SettingsSingleton.getInstance().progressBar;
 		progressBar.setVisible(true);
 		
+		// Create NC entry to know what was the initial file describing the process 
+		Nc nc = NcUtils.getCreateNcFile(config.getInputFilePath());
+		NcUtils.updateNcPath(nc.getNcId(), config.getInputFilePath(), config.getBillet().getBilletId());
+		
 		// Simulate and generate results based on the input file type
 		String inputFileType = config.getInputFileType();
 		switch (inputFileType){
 
 		case "GCode file" :
+			
 			kpis = SimulatorUtils.simulateGCodeFileUGS(kpis, config);
 			break;
 			
 		case "CSV file" :
-			kpis = SimulatorUtils.simulateCsvFile(kpis, config);
+//			kpis = SimulatorUtils.simulateCsvFile(kpis, config);
+			kpis = SimulatorUtils.simulateAnalysisFile(kpis, config);
 			break;
 		default :
 			System.out.println("Unknown input file type.");
@@ -76,19 +85,14 @@ public class SimulateProcessRunnable implements Runnable{
 
 		// Plot the machined part
 		if (config.isShow3dPart()){
-			long timer = System.currentTimeMillis();
 
-			//New plotter - same window
-//			JPanel chart3DPanelV3 = Plotter3D.getV3ChartPanel(kpis.getPart());
-//			ResultsPanel.addTab(
-//					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
-//					, chart3DPanelV3);
+//			checkPart(kpis.getPart());
+
 			JPanel chart3DPanelV4 = Plotter3D.getV4ChartPanel(kpis.getPart());
 			ResultsPanel.addTab(
 					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
 					, chart3DPanelV4);
 			System.out.println("done");
-			System.out.println("new graph time:" + (System.currentTimeMillis() - timer));
 		}
 		
 		//Display charts
@@ -174,6 +178,7 @@ public class SimulateProcessRunnable implements Runnable{
 
 		//Remove temporary files
 		System.out.print("Clearing up temporary files...");
+		String dataFilePath = config.getInputFilePath();System.out.println(dataFilePath);
 //		(new File(analysisFilePath)).delete();
 		System.out.println("all done");
 		System.out.println("Total processing time: " + (System.currentTimeMillis() - startTime) + "msec");
@@ -186,5 +191,24 @@ public class SimulateProcessRunnable implements Runnable{
 		GUIBuilder.refreshCompare = true;
 		GUIBuilder.refreshDataConnect = true;
 		GUIBuilder.refreshTrain = true;
+	}
+
+	/**
+	 * @param part
+	 */
+	private void checkPart(boolean[][][] part) {
+		int xlength = part.length;
+		int ylength = part[0].length;
+		int zlength = part[0][0].length;
+		int zPos = zlength / 2;
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < xlength; i++) {
+			for (int j = 0; j < ylength; j++) {
+				sb.append((part[i][j][zPos]) ? "+" : " ");
+			}
+			sb.append("\n");
+		}
+		IoUtils.writeFile("part_output.csv", sb.toString());
+		
 	}
 }
