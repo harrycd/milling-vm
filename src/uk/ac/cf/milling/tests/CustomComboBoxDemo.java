@@ -35,13 +35,11 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-/*
- * CustomComboBoxDemo.java uses the following files:
- *   images/Bird.gif
- *   images/Cat.gif
- *   images/Dog.gif
- *   images/Rabbit.gif
- *   images/Pig.gif
+/**
+ * Sample code for customised combo-boxes.
+ * @author Oracle and/or its affiliates
+ * @author Theocharis Alexopoulos
+ *
  */
 public class CustomComboBoxDemo extends JPanel {
     ImageIcon[] images;

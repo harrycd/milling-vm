@@ -28,6 +28,7 @@ import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 import uk.ac.cf.milling.utils.simulation.ProfileBuilderUtils;
 
 /**
+ * Builds new cutting tool form panel.
  * @author Theocharis Alexopoulos
  *
  */

@@ -32,6 +32,7 @@ import uk.ac.cf.milling.utils.db.MaterialUtils;
 import uk.ac.cf.milling.utils.runnables.MLTrainRunnable;
 
 /**
+ * Builds the train model panel.
  * @author Theocharis Alexopoulos
  *
  */

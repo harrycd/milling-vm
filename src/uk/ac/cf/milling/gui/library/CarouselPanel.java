@@ -27,6 +27,7 @@ import uk.ac.cf.milling.utils.db.CarouselUtils;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 
 /**
+ * Builds carousel setup map panel.
  * @author Theocharis Alexopoulos
  *
  */

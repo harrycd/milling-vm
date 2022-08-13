@@ -17,6 +17,7 @@ import javax.swing.SwingUtilities;
 import uk.ac.cf.milling.gui.help.HelpPanel;
 
 /**
+ * Builder for the menu bar at the top of the GUI.
  * @author Theocharis Alexopoulos
  *
  */

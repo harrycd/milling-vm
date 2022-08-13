@@ -27,6 +27,7 @@ import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.runnables.ViewProcessRunnable;
 
 /**
+ * Builds the process and data analysis panel.
  * @author Theocharis Alexopoulos
  * @date 1 Sep 2020
  *

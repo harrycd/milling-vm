@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import javax.swing.JTextArea;
 
 /**
+ * Redirects output from console to a text area inside the GUI.
  * @author Theocharis Alexopoulos
  *
  */

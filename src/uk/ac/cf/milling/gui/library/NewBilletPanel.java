@@ -35,6 +35,7 @@ import uk.ac.cf.milling.utils.db.BilletUtils;
 import uk.ac.cf.milling.utils.db.MaterialUtils;
 
 /**
+ * Builds new billet form panel.
  * @author Theocharis Alexopoulos
  *
  */

@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
-import java.io.File;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -27,6 +26,7 @@ import uk.ac.cf.milling.utils.data.IoUtils;
 import uk.ac.cf.milling.utils.db.NcUtils;
 
 /**
+ * Builds the NC and analysis data connection panel.
  * @author Theocharis Alexopoulos
  *
  */

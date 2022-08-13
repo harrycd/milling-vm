@@ -26,6 +26,7 @@ import uk.ac.cf.milling.objects.Material;
 import uk.ac.cf.milling.utils.db.MaterialUtils;
 
 /**
+ * Builds materials list panel. 
  * @author Theocharis Alexopoulos
  *
  */

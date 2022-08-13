@@ -9,6 +9,7 @@ import uk.ac.cf.milling.utils.learning.DataSynchronisation;
 import uk.ac.cf.milling.utils.learning.Models;
 
 /**
+ * Start the ML model creation and training process.
  * @author Theocharis Alexopoulos
  * @date 24 Aug 2020
  *

@@ -13,6 +13,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import uk.ac.cf.milling.gui.GUIBuilder;
 
 /**
+ * This is the starting point for running the simulator.<br>
+ * Initialises the local graphical interface.
  * @author Theocharis Alexopoulos
  *
  */

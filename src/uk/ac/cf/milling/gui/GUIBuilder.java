@@ -28,6 +28,8 @@ import uk.ac.cf.milling.gui.simulation.ProcessPanel;
 import uk.ac.cf.milling.gui.simulation.ResultsPanel;
 
 /**
+ * Initialises the GUI, builds its skeleton and triggers specialised builders<br>
+ * to create the panels that the user sees.
  * @author Theocharis Alexopoulos
  *
  */

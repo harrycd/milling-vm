@@ -33,6 +33,7 @@ import uk.ac.cf.milling.utils.db.NcUtils;
 import uk.ac.cf.milling.utils.runnables.MLCompareRunnable;
 
 /**
+ * Builds the data syncronisation and comparison panel.
  * @author Theocharis Alexopoulos
  *
  */

@@ -23,6 +23,7 @@ import uk.ac.cf.milling.gui.DefaultPanelElements;
 import uk.ac.cf.milling.utils.db.SettingUtils;
 
 /**
+ * Builds the panel that displays and holds the logs of simulator.
  * @author Theocharis Alexopoulos
  *
  */

@@ -33,6 +33,8 @@ import uk.ac.cf.milling.utils.plotting.Plotter3D;
 import uk.ac.cf.milling.utils.simulation.SimulatorUtils;
 
 /**
+ * Starts the simulation engine with data supplied through the<br>
+ * simulator control panel.
  * @author Theocharis Alexopoulos
  *
  */
@@ -68,7 +70,6 @@ public class SimulateProcessRunnable implements Runnable{
 			break;
 			
 		case "CSV file" :
-//			kpis = SimulatorUtils.simulateCsvFile(kpis, config);
 			kpis = SimulatorUtils.simulateAnalysisFile(kpis, config);
 			break;
 		default :
@@ -123,17 +124,16 @@ public class SimulateProcessRunnable implements Runnable{
 				}
 				// Subtract the usage from previous runs
 				List<CuttingToolProfile> axialProfilesOld = CuttingToolUtils.getCuttingTool(tool.getToolId()).getAxialProfile();
-				index=0;
-				for (CuttingToolProfile profile:axialProfilesOld){
-					axialProfilesDataY[index] -= profile.getMaterialRemoved();
-					index++;
-				}
+				subtractPreviouslyRemovedMaterial(axialProfilesOld, axialProfilesDataY);
 				
-				JPanel axialToolPanel = Plotter2D.get2dPlotPanel(
-						"Axial Profile (side)", 
+				
+				JPanel axialToolPanelNew = Plotter2D.get2dHistogramPanel(
 						ConvertUtils.castToFloatArray(axialProfilesDataX), 
-						ConvertUtils.castToFloatArray(axialProfilesDataY));
-				panels.add(axialToolPanel);
+						ConvertUtils.castToFloatArray(axialProfilesDataY),
+						"Distance from nose (mm)",
+						"Elements machined"
+						);
+				panels.add(axialToolPanelNew);
 				
 				
 				// Generating radial usage chart
@@ -147,16 +147,16 @@ public class SimulateProcessRunnable implements Runnable{
 					radialIndex++;
 				}
 				
-//				Chart radialUsage = Plotter2D.get2dPlot(radialProfilesDataX, radialProfilesDataY);
-//				radialUsage.getAxeLayout().setXAxeLabel("Distance from centre [mm]");
-//				radialUsage.getAxeLayout().setYAxeLabel("Length in material machined [mm]");
-//				
-//				plots.add(radialUsage);
-
-				JPanel radialToolPanel = Plotter2D.get2dPlotPanel(
-						"Radial Profile (nose)", 
+				// Subtract the usage from previous runs
+				List<CuttingToolProfile> radialProfilesOld = CuttingToolUtils.getCuttingTool(tool.getToolId()).getRadialProfile();
+				subtractPreviouslyRemovedMaterial(radialProfilesOld, radialProfilesDataY);
+				
+				
+				JPanel radialToolPanel = Plotter2D.get2dHistogramPanel(
 						ConvertUtils.castToFloatArray(radialProfilesDataX), 
-						ConvertUtils.castToFloatArray(radialProfilesDataY)
+						ConvertUtils.castToFloatArray(radialProfilesDataY),
+						"Distance from centre (mm)",
+						"Elements machined"
 						);
 				
 				panels.add(radialToolPanel);
@@ -178,7 +178,7 @@ public class SimulateProcessRunnable implements Runnable{
 
 		//Remove temporary files
 		System.out.print("Clearing up temporary files...");
-		String dataFilePath = config.getInputFilePath();System.out.println(dataFilePath);
+//		String dataFilePath = config.getInputFilePath();System.out.println(dataFilePath);
 //		(new File(analysisFilePath)).delete();
 		System.out.println("all done");
 		System.out.println("Total processing time: " + (System.currentTimeMillis() - startTime) + "msec");
@@ -191,6 +191,20 @@ public class SimulateProcessRunnable implements Runnable{
 		GUIBuilder.refreshCompare = true;
 		GUIBuilder.refreshDataConnect = true;
 		GUIBuilder.refreshTrain = true;
+	}
+
+	/**
+	 * @param oldProfiles - Cutting tool profiles before latest run (retrieved from the database 
+	 * since nothing has been changed there yet)
+	 * 
+	 * @param newProfiles - Cutting tool profiles after latest run (is already in memory)
+	 */
+	private void subtractPreviouslyRemovedMaterial(List<CuttingToolProfile> oldProfiles, double[] newProfiles) {
+		int index=0;
+		for (CuttingToolProfile profile:oldProfiles){
+			newProfiles[index] -= profile.getMaterialRemoved();
+			index++;
+		}
 	}
 
 	/**

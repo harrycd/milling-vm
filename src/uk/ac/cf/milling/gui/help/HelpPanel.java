@@ -12,6 +12,7 @@ import javax.swing.JTextArea;
 import javax.swing.UIManager;
 
 /**
+ * Builds the help section panel.
  * @author Theocharis Alexopoulos
  *
  */
@@ -31,10 +32,9 @@ public class HelpPanel {
 	
 	public static void showAbout(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Version 0.8.1\n");
+		sb.append("Version 0.6.5\n");
 		sb.append("Known restrictions / problems:\n");
 		sb.append("* All offsets are not supported\n");
-		sb.append("* Billet is a cuboid\n");
 		sb.append("* The cutting tool is homogenous and does not deflect.\n");
 		sb.append("\n");
 		JTextArea message = new JTextArea(sb.toString());

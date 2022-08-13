@@ -19,6 +19,7 @@ import uk.ac.cf.milling.gui.GUIBuilder;
 import uk.ac.cf.milling.utils.db.MaterialUtils;
 
 /**
+ * Builds new material form panel.
  * @author Theocharis Alexopoulos
  *
  */

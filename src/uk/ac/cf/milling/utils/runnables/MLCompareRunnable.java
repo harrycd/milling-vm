@@ -23,6 +23,8 @@ import uk.ac.cf.milling.utils.learning.DataSynchronisation;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
 
 /**
+ * Starts the 2 dataset synchronisation and comparison process and<br>
+ * fills the results panel tab with the generated graphs.
  * @author Theocharis Alexopoulos
  *
  */

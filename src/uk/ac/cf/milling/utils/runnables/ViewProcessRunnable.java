@@ -17,6 +17,8 @@ import uk.ac.cf.milling.utils.data.DataManipulationUtils;
 import uk.ac.cf.milling.utils.data.IoUtils;
 
 /**
+ * Starts the process and data analysis that fills the corresponding panel<br>
+ * with graphs and data.
  * @author Theocharis Alexopoulos
  * @date 2 Sep 2020
  *

@@ -34,6 +34,7 @@ import uk.ac.cf.milling.utils.db.SettingUtils;
 import uk.ac.cf.milling.utils.runnables.SimulateProcessRunnable;
 
 /**
+ * Builds the panel that contains simulator setup and run functions.
  * @author Theocharis Alexopoulos
  *
  */
@@ -178,14 +179,14 @@ public class ControlPanel {
 		panel.add(chkbxShow3dPart,constr);
 		
 		// Time step label
-		JLabel lblTimeStep = new JLabel("Time step: ");
-		lblTimeStep.setFont(fontPlain);
-		constr = new GridBagConstraints();
-		constr.anchor = GridBagConstraints.EAST;
-		constr.gridx = 0;
-		constr.gridy = 9;
-		constr.insets = new Insets(10, 10, 10, 10);
-		panel.add(lblTimeStep,constr);
+//		JLabel lblTimeStep = new JLabel("Time step: ");
+//		lblTimeStep.setFont(fontPlain);
+//		constr = new GridBagConstraints();
+//		constr.anchor = GridBagConstraints.EAST;
+//		constr.gridx = 0;
+//		constr.gridy = 9;
+//		constr.insets = new Insets(10, 10, 10, 10);
+//		panel.add(lblTimeStep,constr);
 		
 		// Time step auto calc button
 //		JButton btnTimeStepCalc = new JButton("ơ");
@@ -200,17 +201,17 @@ public class ControlPanel {
 		
 		
 		// Time step text box
-		JTextField txtTimeStep = new JTextField(5);
-		txtTimeStep.setFont(fontPlain);
-		txtTimeStep.setEditable(true);
-		txtTimeStep.setMinimumSize(new Dimension(81, 27));
-		txtTimeStep.setText(SettingUtils.getSetting("timeStep"));
-		constr = new GridBagConstraints();
-//		constr.anchor = GridBagConstraints.EAST;
-		constr.gridx = 1;
-		constr.gridy = 9;
-		constr.insets = new Insets(10, 10, 10, 10);
-		panel.add(txtTimeStep, constr);
+//		JTextField txtTimeStep = new JTextField(5);
+//		txtTimeStep.setFont(fontPlain);
+//		txtTimeStep.setEditable(true);
+//		txtTimeStep.setMinimumSize(new Dimension(81, 27));
+//		txtTimeStep.setText(SettingUtils.getSetting("timeStep"));
+//		constr = new GridBagConstraints();
+////		constr.anchor = GridBagConstraints.EAST;
+//		constr.gridx = 1;
+//		constr.gridy = 9;
+//		constr.insets = new Insets(10, 10, 10, 10);
+//		panel.add(txtTimeStep, constr);
 		
 		// Time step units label
 		JLabel lblTimeStepUnits = new JLabel("sec");
@@ -250,7 +251,7 @@ public class ControlPanel {
 		/* Listeners */
 		btnBrowse.addActionListener(getBtnBrowseListener(txtInputFilePath, cmbInputFileType, chooser));
 
-		btnRun.addActionListener(getBtnRunListener(txtTimeStep, cmbBillet, txtInputFilePath, cmbInputFileType, chkbxShow3dPart, chkbxShow2dGraphs));
+		btnRun.addActionListener(getBtnRunListener(cmbBillet, txtInputFilePath, cmbInputFileType, chkbxShow3dPart, chkbxShow2dGraphs));
 
 //		TODO Cancel process if it takes too long or other issues.		
 //		btnCancel.addActionListener(new ActionListener() {
@@ -308,13 +309,12 @@ public class ControlPanel {
 	 * @param txtTimeStep 
 	 * @return
 	 */
-	private ActionListener getBtnRunListener(JTextField txtTimeStep, JComboBox<Billet> cmbBillet, JTextField txtInputFilePath, JComboBox<String> cmbInputFileType, JCheckBox chkbxShow3dPart, JCheckBox chkbxShow2dGraphs) {
+	private ActionListener getBtnRunListener(JComboBox<Billet> cmbBillet, JTextField txtInputFilePath, JComboBox<String> cmbInputFileType, JCheckBox chkbxShow3dPart, JCheckBox chkbxShow2dGraphs) {
 		ActionListener listener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
 				// Save timestep setting, 
-				SettingUtils.setTimeStep(txtTimeStep.getText());
 				Billet billet = (Billet) cmbBillet.getSelectedItem();
 				boolean inputOK = checkInputOK();
 				

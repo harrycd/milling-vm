@@ -8,15 +8,11 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.checkerframework.checker.units.qual.cd;
-
-import uk.ac.cf.milling.objects.Material;
-
 /**
+ * Convenient methods that facilitate reuse of GUI elements.
  * @author Theocharis Alexopoulos
  * @date 26 Aug 2020
  *

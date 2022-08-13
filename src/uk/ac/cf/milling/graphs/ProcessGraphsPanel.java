@@ -32,6 +32,7 @@ import uk.ac.cf.milling.utils.plotting.ColourScatter3D;
 import uk.ac.cf.milling.utils.plotting.Plotter2D;
 
 /**
+ * Constructs the panels for 2D and 3D graphs.
  * @author Theocharis Alexopoulos
  * @date 21 Sep 2020
  *

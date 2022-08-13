@@ -53,7 +53,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 /**
- * Component to be used as tabComponent;
+ * The tab component mainly for navigating around results.
+ * @author Theocharis Alexopoulos
  * Contains a JLabel to show the text and 
  * a JButton to close the tab it belongs to 
  */ 

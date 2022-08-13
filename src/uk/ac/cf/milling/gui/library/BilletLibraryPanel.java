@@ -26,6 +26,7 @@ import uk.ac.cf.milling.objects.Billet;
 import uk.ac.cf.milling.utils.db.BilletUtils;
 
 /**
+ * Builds billets list panel.
  * @author Theocharis Alexopoulos
  *
  */

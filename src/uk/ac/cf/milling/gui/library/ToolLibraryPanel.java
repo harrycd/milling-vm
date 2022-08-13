@@ -24,6 +24,7 @@ import uk.ac.cf.milling.objects.CuttingTool;
 import uk.ac.cf.milling.utils.db.CuttingToolUtils;
 
 /**
+ * Builds cutting tool list panel
  * @author Theocharis Alexopoulos
  *
  */

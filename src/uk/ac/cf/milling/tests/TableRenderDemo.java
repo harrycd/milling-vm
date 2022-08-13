@@ -55,6 +55,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 /** 
+ * Sample code to integrate comboboxes into a table.
+ * @author Oracle and/or its affiliates
+ * @author Theocharis Alexopoulos
  * TableRenderDemo is just like TableDemo, except that it
  * explicitly initializes column sizes and it uses a combo box
  * as an editor for the Sport column.

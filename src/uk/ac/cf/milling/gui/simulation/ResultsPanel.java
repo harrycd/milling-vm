@@ -15,6 +15,7 @@ import uk.ac.cf.milling.gui.ButtonTabComponent;
 import uk.ac.cf.milling.utils.plotting.PlotterUtils;
 
 /**
+ * Builds the tab based panel that shows graphs and simulation reports. 
  * @author Theocharis Alexopoulos
  *
  */

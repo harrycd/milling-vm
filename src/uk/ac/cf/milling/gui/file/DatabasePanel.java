@@ -22,6 +22,7 @@ import uk.ac.cf.milling.utils.db.DatabaseUtils;
 import uk.ac.cf.milling.utils.db.SettingUtils;
 
 /**
+ * Builds the database selection or creation panel.
  * @author Theocharis Alexopoulos
  *
  */
