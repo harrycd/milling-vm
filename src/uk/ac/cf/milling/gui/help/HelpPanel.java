@@ -26,16 +26,15 @@ public class HelpPanel {
 
 	private JPanel createHelpContentsPanel() {
 		JPanel panel = new JPanel();
-		panel.add(new JLabel("Help Contents"));
+		panel.add(new JLabel("Please check Appendix A of Theocharis Alexopoulos' thesis."));
 		return panel;
 	}
 	
 	public static void showAbout(){
 		StringBuilder sb = new StringBuilder();
-		sb.append("Version 0.6.5\n");
-		sb.append("Known restrictions / problems:\n");
-		sb.append("* All offsets are not supported\n");
-		sb.append("* The cutting tool is homogenous and does not deflect.\n");
+		sb.append("Version 0.6.6\n");
+		sb.append("Based on the PhD thesis of Theocharis Alexopoulos\n");
+		sb.append("Contact email: tacontact@gmail.com\n");
 		sb.append("\n");
 		JTextArea message = new JTextArea(sb.toString());
 		message.setEditable(false);

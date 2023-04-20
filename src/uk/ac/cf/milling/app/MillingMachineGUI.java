@@ -7,6 +7,10 @@
  */
 package uk.ac.cf.milling.app;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -26,6 +30,14 @@ public class MillingMachineGUI {
 		System.out.println("Total memory : " + runtime.totalMemory());
 		System.out.println("Max memory   : " + runtime.maxMemory());
 		System.out.println("Processors   : " + runtime.availableProcessors());
+		
+		// Ensure correct folder structure is in place
+		try {
+			Files.createDirectories(Paths.get("Database"));
+			Files.createDirectories(Paths.get("MLModel"));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
 		// Set App theme
 		try {

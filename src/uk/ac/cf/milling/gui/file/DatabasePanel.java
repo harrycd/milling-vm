@@ -9,6 +9,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -195,7 +196,7 @@ public class DatabasePanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
-				chooser.setCurrentDirectory(new java.io.File("."));
+				chooser.setCurrentDirectory(new java.io.File("Database"));
 				chooser.setDialogTitle("Select database file");
 				chooser.setFileFilter(new FileNameExtensionFilter("db file", "db"));
 				chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -228,8 +229,8 @@ public class DatabasePanel {
 				txtElementSize.setVisible(false);
 				lblTimeStep.setVisible(false);
 				txtTimeStep.setVisible(false);
-				SettingUtils.setDbFilePath(txtSelectedDatabase.getText());
-				DatabaseUtils.createDB(txtSelectedDatabase.getText(), txtElementSize.getText(), txtTimeStep.getText());
+				SettingUtils.setDbFilePath("Database" + File.separator + txtSelectedDatabase.getText());
+				DatabaseUtils.createDB("Database" + File.separator + txtSelectedDatabase.getText(), txtElementSize.getText(), txtTimeStep.getText());
 				GUIBuilder.createAndShowFullGUI();
 			}
 		};

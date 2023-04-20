@@ -89,6 +89,12 @@ public class SimulateProcessRunnable implements Runnable{
 
 //			checkPart(kpis.getPart());
 
+//			JPanel chart3DPanelV3 = Plotter3D.getV3ChartPanel(kpis.getPart());
+//			ResultsPanel.addTab(
+//					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
+//					, chart3DPanelV3);
+//			System.out.println("done");
+
 			JPanel chart3DPanelV4 = Plotter3D.getV4ChartPanel(kpis.getPart());
 			ResultsPanel.addTab(
 					"Part: " +	Paths.get(config.getInputFilePath()).getFileName()
