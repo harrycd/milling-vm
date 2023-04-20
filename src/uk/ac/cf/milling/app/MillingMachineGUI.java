@@ -1,9 +1,8 @@
 /**
  * The current milling machine makes the following assumptions
- * Only linear G0 and G1 commands are given
- * The billet is a cube
- * The cutting tool does not collide with the billet (can start cutting under the surface
- * The cutting tool is homogenous, does not deflect and has infinite number of teeth.
+ * The cutting tool does not collide with the billet (can start cutting under the surface)
+ * The cutting tool is homogenous and does not deflect.
+ * The G-Code is compatible with ISO standard without custom commands
  */
 package uk.ac.cf.milling.app;
 
