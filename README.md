@@ -10,3 +10,5 @@ To run the example (minimum 4GB of RAM):
 3. Select the existing cylinders.db as the database
 4. In the control panel select to run the CSV file in NCFiles folder
 5. Check to see both 2D and 3D graphs.
+
+All four repositories are part of Theocharis Alexopoulos' PhD thesis. If you are interested in the project or would like to integrate the simulator with a machining process feel free to contact me through LinkedIn (see link under my profile).
